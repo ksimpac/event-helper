@@ -33,10 +33,10 @@
                 <div class="collapse navbar-collapse left" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <a class="nav-item nav-link text-white" href="./系辦">系辦</a>
-                        <a class="nav-item nav-link text-white" href="./系會">系會</a>
-                        <a class="nav-item nav-link text-white" href="./校內">校內</a>
-                        <a class="nav-item nav-link text-white" href="./校外">校外</a>
+                        <a class="nav-item nav-link text-white" href="../系辦">系辦</a>
+                        <a class="nav-item nav-link text-white" href="../系會">系會</a>
+                        <a class="nav-item nav-link text-white" href="../校內">校內</a>
+                        <a class="nav-item nav-link text-white" href="../校外">校外</a>
                     </ul>
                 </div>
 
