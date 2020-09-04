@@ -22,8 +22,10 @@ document.getElementById("dateEnd").addEventListener("change", function() {
     document.getElementById("enrollDeadline").flatpickr({
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        minDate: document.getElementById("dateStart").value,
-        maxDate: new Date(document.getElementById("dateEnd").value).fp_incr(-1),
+        minDate: new Date(),
+        maxDate: new Date(document.getElementById("dateStart").value).fp_incr(
+            -1
+        ),
         locale: "zh_tw"
     });
 });
