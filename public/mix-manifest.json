@@ -1,0 +1,13 @@
+{
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/node_modules/flatpickr/js/flatpickr.min.js": "/node_modules/flatpickr/js/flatpickr.min.js",
+    "/node_modules/flatpickr/js/zh-tw.js": "/node_modules/flatpickr/js/zh-tw.js",
+    "/node_modules/fontawesome-free/js/all.min.js": "/node_modules/fontawesome-free/js/all.min.js",
+    "/node_modules/flatpickr/css/flatpickr.min.css": "/node_modules/flatpickr/css/flatpickr.min.css",
+    "/node_modules/tinymce/jquery.tinymce.js": "/node_modules/tinymce/jquery.tinymce.js",
+    "/node_modules/tinymce/jquery.tinymce.min.js": "/node_modules/tinymce/jquery.tinymce.min.js",
+    "/node_modules/tinymce/tinymce.js": "/node_modules/tinymce/tinymce.js",
+    "/node_modules/tinymce/tinymce.min.js": "/node_modules/tinymce/tinymce.min.js",
+    "/node_modules/fontawesome-free/css/all.min.css": "/node_modules/fontawesome-free/css/all.min.css"
+}

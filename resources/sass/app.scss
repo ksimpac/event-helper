@@ -1,0 +1,16 @@
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Nunito");
+
+// Variables
+@import "variables";
+
+// Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+.bg-dm-orange {
+    background-color: $dm_orange;
+}
+
+.bg-dm-blue {
+    background-color: $dm_blue;
+}
