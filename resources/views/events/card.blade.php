@@ -14,7 +14,7 @@
             <p class="card-text">{{ substr($event->dateStart, 0, 16)." ~ ".substr($event->dateEnd, 0, 16) }}</p>
             
             <div class="progress @if(!isset($event->count)) invisible @endif">
-              <div class="progress-bar bg-success" role="progressbar" @if(isset($event->count)) style="width: {{ strval(round($event->count / $event->maximum * 100, 0)) }}%;" aria-valuenow="{{ strval(round($event->count / $event->maximum * 100 , 0)) }}" @endif aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar" role="progressbar" @if(isset($event->count)) style="width: {{ strval(round($event->count / $event->maximum * 100, 0)) }}%;" aria-valuenow="{{ strval(round($event->count / $event->maximum * 100 , 0)) }}" @endif aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             
           </div>
