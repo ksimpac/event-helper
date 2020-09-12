@@ -9,7 +9,7 @@
           
           <div class="card-body">
             <p class="card-text">活動標語：<span>{{ $event->slogan }}</span></p>
-            <p class="card-text">活動時間：<span>{{ substr($event->dateStart, 0, 16) }} ~ {{ substr($event->dateEnd, 0, 16) }}</span></p>
+            <p class="card-text">活動時間：<span>{{ $event->dateStart }} 至 {{ $event->dateEnd }}</span></p>
             <p class="card-text">活動地點：<span>{{ $event->location }}</span></p>
             
             <p class="card-text">活動對象：
@@ -31,7 +31,7 @@
               </span>
             </p>
 
-            <p class="card-text">報名截止時間：<span>{{ substr($event->enrollDeadline, 0, 16) }}</span></p>
+            <p class="card-text">報名截止時間：<span>{{ $event->enrollDeadline }}</span></p>
 
             <p class="card-text">標籤：
               @foreach($tags as $tag)

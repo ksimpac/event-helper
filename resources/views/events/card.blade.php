@@ -8,10 +8,14 @@
       <div class="col-sm-4">
         <div class="card">
           <img class="card-img-top" src="{{ asset('/storage/image/index').'/'.$event->imageName }}" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">{{ $event->title }}</h5>
-            <p class="card-text">{{ $event->title }}</p>
-            <p class="card-text">{{ substr($event->dateStart, 0, 16)." ~ ".substr($event->dateEnd, 0, 16) }}</p>
+          <div class="card-body text-center">
+            <h5 class="card-title font-weight-bold">{{ $event->title }}</h5>
+            <p class="card-text">{{ $event->slogan }}</p>
+            <p class="card-text">
+              <i class="far fa-clock fa-1x"></i>{{ $event->dateStart }}<br />
+              至<br />
+              <i class="far fa-clock fa-1x"></i>{{ $event->dateEnd }}<br />
+            </p>
             
             <div class="progress @if(!isset($event->count)) invisible @endif">
               <div class="progress-bar" role="progressbar" @if(isset($event->count)) style="width: {{ strval(round($event->count / $event->maximum * 100, 0)) }}%;" aria-valuenow="{{ strval(round($event->count / $event->maximum * 100 , 0)) }}" @endif aria-valuemin="0" aria-valuemax="100"></div>

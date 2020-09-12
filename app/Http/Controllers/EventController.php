@@ -12,7 +12,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Auth;
 use App\Library\AddInfoInEvent;
 use Carbon\Carbon;
-//use Barryvdh\Debugbar\Facade as Debugbar;
+use Barryvdh\Debugbar\Facade as Debugbar;
 
 
 class EventController extends Controller
@@ -38,15 +38,18 @@ class EventController extends Controller
         
         if($param == null)
         {
-            $events = DB::table('events')->orderBy('enrollDeadline', 'desc')->get();
+            $events = DB::table('events')->orderBy('dateEnd', 'desc')->get();
         }
         else
         {
-            $events = DB::table('events')->where('type', '=', $param)->orderBy('enrollDeadline', 'desc')->get();
+            $events = DB::table('events')->where('type', '=', $param)->orderBy('dateEnd', 'desc')->get();
         }
         
         foreach ($events as $event)
         {
+            $event->dateStart = $this->dateTimeFormat($event->dateStart, "Add Week");
+            $event->dateEnd = $this->dateTimeFormat($event->dateEnd, "Add Week");
+            
             $count = DB::table('participants')->where('event_id', $event->event_id)->count(); //計算該活動有多少人報名
             
             if($event->maximum != 0) {
@@ -84,8 +87,12 @@ class EventController extends Controller
         $limits = DB::table('limits')->where('event_id', $event->event_id)->get('identify');
         $isSignUp = $this->isSignUp(Auth::id(), $event->event_id);
         $isAddInFavorite = $this->isAddInFavorite(Auth::id(), $event->event_id);
-        $event->dateStartStr = Carbon::parse($event->dateStart)->format("Ymd")."T".Carbon::parse($event->dateStart)->subHours(8)->format("His")."Z";
-        $event->dateEndStr = Carbon::parse($event->dateEnd)->format("Ymd")."T".Carbon::parse($event->dateEnd)->subHours(8)->format("His")."Z";
+        $event->dateStartStr = $this->dateTimeFormat($event->dateStart, "Google Calendar");
+        $event->dateEndStr = $this->dateTimeFormat($event->dateEnd, "Google Calendar");
+        $event->dateStart = $this->dateTimeFormat($event->dateStart, "Add Week");
+        $event->dateEnd = $this->dateTimeFormat($event->dateEnd, "Add Week");
+        $event->enrollDeadline = $this->dateTimeFormat($event->enrollDeadline, "Add Week");
+
         return view('events.show', compact('parts', 'event', 'tags', 'limits', 'isSignUp', 'isAddInFavorite'));
     }
 
@@ -311,6 +318,34 @@ class EventController extends Controller
         {
             $key = array_search("系辦", $this->types);
             unset($this->types[$key]);
+        }
+    }
+
+    public function dateTimeFormat($dateString, $option)
+    {
+        if($option == "Add Week")
+        {
+            $weekMap = [
+                0 => '日',
+                1 => '一',
+                2 => '二',
+                3 => '三',
+                4 => '四',
+                5 => '五',
+                6 => '六',
+            ];
+    
+            $dayOfTheWeek = Carbon::parse($dateString)->dayOfWeek;
+            $date = explode(" ", $dateString);
+            return $date[0]. "(" . $weekMap[$dayOfTheWeek] . ") " . substr($date[1], 0 , 5);
+        }
+        
+        if($option == "Google Calendar")
+        {
+            /**
+             * 因為Google Calendar會自動將輸入時間格式轉成使用者所在時區的時間，故要先減掉8小時
+             */
+            return Carbon::parse($dateString)->format("Ymd")."T".Carbon::parse($dateString)->subHours(8)->format("His")."Z";
         }
     }
 }
