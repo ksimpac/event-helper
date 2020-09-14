@@ -27,19 +27,6 @@
         <nav class="navbar navbar-expand-md navbar-light bg-dm-orange shadow-sm">
             <div class="container">
 
-                <button class="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target=".navbar-collapse.left">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse left" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-                        <a class="nav-item nav-link text-white" href="../系辦">系辦</a>
-                        <a class="nav-item nav-link text-white" href="../系會">系會</a>
-                        <a class="nav-item nav-link text-white" href="../校內">校內</a>
-                        <a class="nav-item nav-link text-white" href="../校外">校外</a>
-                    </ul>
-                </div>
-
                 <!-- Center Of Navbar -->
                 <a class="navbar-brand text-white mx-auto" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -90,6 +77,18 @@
             </div>
         </nav>
 
+        <div class="container mt-1">
+            <div class="row justify-content-center">
+                <a class="btn {{ Agent::isMobile() ? 'btn-sm' : 'btn-lg' }} bg-dm-blue text-white fontsize_15px rounded-pill mr-1 " href="../">最新活動</a>
+                <a class="btn {{ Agent::isMobile() ? 'btn-sm' : 'btn-lg' }} bg-dm-blue text-white fontsize_15px rounded-pill mr-1" href="../系辦">系辦活動</a>
+                <a class="btn {{ Agent::isMobile() ? 'btn-sm' : 'btn-lg' }} bg-dm-blue text-white fontsize_15px rounded-pill mr-1" href="../系會">系會活動</a>
+                <a class="btn {{ Agent::isMobile() ? 'btn-sm' : 'btn-lg' }} bg-dm-blue text-white fontsize_15px rounded-pill mr-1" href="../校內">校內活動</a>
+                <a class="btn {{ Agent::isMobile() ? 'btn-sm' : 'btn-lg' }} bg-dm-blue text-white fontsize_15px rounded-pill" href="../校外">校外活動</a>
+              </div>
+        </div>
+
+        @include('events.carousel')
+ 
         <main class="py-5 mb-4">
             @yield('content')
         </main>
