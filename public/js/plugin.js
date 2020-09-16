@@ -13,7 +13,7 @@ document.getElementById("dateStart").addEventListener("change", function() {
     document.getElementById("dateEnd").flatpickr({
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        minDate: new Date().fp_incr(1),
+        minDate: new Date(document.getElementById("dateStart").value),
         locale: "zh_tw"
     });
 });
