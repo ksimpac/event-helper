@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\Rules\MatchStudentID;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -52,14 +53,13 @@ class RegisterController extends Controller
         $regex_pattern = 'regex:/^\S*(?=\S{10,30})(?=\S*[a-z])(?=\S*[A-Z])(?![ ])\S*$/';
 
         return Validator::make($data, [
-            'std_id' => ['required', 'string', 'min:10', 'max:10', 'unique:users'],
+            'std_id' => ['required', 'string', 'min:10', 'max:10', 'unique:users', new MatchStudentID],
             'realname' => ['required', 'string', 'min:2', 'max:255'],
             'account' => ['required', 'string', 'min:10', 'max:30', $regex_pattern, 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:10', 'max:30', $regex_pattern, 'confirmed'],
-            'telephone' =>['required', 'string', 'min:10', 'max:10', 'unique:users']
+            'telephone' => ['required', 'string', 'min:10', 'max:10', 'unique:users']
         ]);
-
     }
 
     /**
