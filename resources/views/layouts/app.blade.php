@@ -57,9 +57,9 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    
+
                                     @include('layouts.dropdownItem')
-                                    
+
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -77,22 +77,10 @@
             </div>
         </nav>
 
-        <div class="container mt-1">
-            <div class="row justify-content-center">
-                <a class="btn {{ Agent::isMobile() ? 'btn-sm' : 'btn-lg' }} bg-dm-blue text-white fontsize_15px rounded-pill mr-1 " href="../">最新活動</a>
-                <a class="btn {{ Agent::isMobile() ? 'btn-sm' : 'btn-lg' }} bg-dm-blue text-white fontsize_15px rounded-pill mr-1" href="../系辦">系辦活動</a>
-                <a class="btn {{ Agent::isMobile() ? 'btn-sm' : 'btn-lg' }} bg-dm-blue text-white fontsize_15px rounded-pill mr-1" href="../系會">系會活動</a>
-                <a class="btn {{ Agent::isMobile() ? 'btn-sm' : 'btn-lg' }} bg-dm-blue text-white fontsize_15px rounded-pill mr-1" href="../校內">校內活動</a>
-                <a class="btn {{ Agent::isMobile() ? 'btn-sm' : 'btn-lg' }} bg-dm-blue text-white fontsize_15px rounded-pill" href="../校外">校外活動</a>
-              </div>
-        </div>
-
-        @include('events.carousel')
- 
-        <main class="py-5 mb-4">
+        <main class="py-3 mb-5">
             @yield('content')
         </main>
-        
+
         @include('layouts.footer')
     </div>
 </body>
