@@ -1,6 +1,6 @@
 @forelse ($events as $event)
       @if($loop->index % 3 == 0)
-        <div class="row d-flex justify-content-center align-items-stretch">
+        <div class="row d-flex justify-content-center align-items-stretch py-3">
           <div class="col-sm-12">
             <div class="card-deck">
       @endif
