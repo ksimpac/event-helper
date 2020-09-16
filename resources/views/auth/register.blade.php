@@ -13,19 +13,19 @@
 
                         <div class="form-group row">
                             <label for="std_id" class="col-md-4 col-form-label text-md-right">學號</label>
-                            
+
                             <div class="col-md-6">
                                 <input id="std_id" type="text" class="form-control @error('std_id') is-invalid @enderror" name="std_id" value="{{ old('std_id') }}" required autocomplete="std_id" autofocus>
-                                
+
                                 @error('std_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                                 <label for="std_id" class="text-danger">※註冊後將無法修改</label>
-                            </div>    
+                            </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <label for="realname" class="col-md-4 col-form-label text-md-right">{{ __('Realname') }}</label>
 
@@ -55,14 +55,11 @@
                                     <option>流管四A</option>
                                     <option>流管所研一</option>
                                     <option>流管所研二</option>
-                                    <option>本系老師</option>
-                                    <option>本校老師</option>
-                                    <option>外校老師</option>
                                 </select>
                                 <label for="identify" class="text-danger">※註冊後將無法修改</label>
                             </div>
                         </div>
-												
+
                         <div class="form-group row">
                             <label for="telephone" class="col-md-4 col-form-label text-md-right">{{ __('Telephone') }}</label>
 

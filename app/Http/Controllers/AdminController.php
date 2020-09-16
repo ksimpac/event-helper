@@ -54,9 +54,15 @@ class AdminController extends Controller
         ]);
 
         $data['password'] = Hash::make($data['password']);
-        $data['realname'] = $data['type'];
         $data['created_at'] = now();
         $data['updated_at'] = $data['created_at'];
+
+        if ($data['type'] != "系辦" && $data['type'] != "系會") {
+            $data['realname'] = $data['type'];
+            $data['type'] = "user";
+        } else {
+            $data['realname'] = $data['type'];
+        }
 
         DB::table('users')->insert($data);
         return redirect()->back()->with('successMsg', '帳號建立成功！');

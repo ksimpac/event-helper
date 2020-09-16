@@ -13,25 +13,16 @@
 
                         <div class="form-group row">
                             <label for="type" class="col-md-4 text-md-right control-label">帳號類型</label>
-                          
-                            <div class="col-md-6">
-                                <div class="@error('type') is-invalid @enderror">
-                                    <div class="custom-control custom-radio custom-control-inline ml-3">
-                                        <input type="radio" id="option1" name="type" class="custom-control-input" value="系辦">
-                                        <label class="custom-control-label" for="option1">系辦</label>
-                                    </div>
-    
-                                    <div class="custom-control custom-radio custom-control-inline ml-3">
-                                        <input type="radio" id="option2" name="type" class="custom-control-input" value="系會">
-                                        <label class="custom-control-label" for="option2">系會</label>
-                                    </div>
-                                </div>
 
-                                @error('type')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <div class="col-md-6">
+
+                                <select class="form-control" id="type" name="type">
+                                    <option>系辦</option>
+                                    <option>系會</option>
+                                    <option>本系老師</option>
+                                    <option>本校老師</option>
+                                    <option>外校老師</option>
+                                </select>
 
                                 <label for="type" class="text-danger">※註冊後將無法修改</label>
                             </div>
