@@ -19,49 +19,47 @@ class EventController extends Controller
 {
     private $targets;
     private $types;
-    
+
     public function __construct()
     {
-        $this->targets = ["流管一1", "流管二1" ,"流管三1", "流管四1",
-        "流管三A", "流管四A", "流管所研一", "流管所研二",
-        "本系老師", "本校老師", "外校老師"];
+        $this->targets = [
+            "流管一1", "流管二1", "流管三1", "流管四1",
+            "流管三A", "流管四A", "流管所研一", "流管所研二",
+            "本系老師", "本校老師", "外校老師"
+        ];
 
-        $this->types = ["系辦" , "系會" ,"校內", "校外"];
+        $this->types = ["系辦", "系會", "校內", "校外"];
     }
-    
+
     public function index($param = null)
     {
 
         $type = array("系辦", "系會", "校內", "校外");
 
-        if(in_array($param, $type) == false && $param != null) abort(404);
-        
-        if($param == null)
-        {
+        if (in_array($param, $type) == false && $param != null) abort(404);
+
+        if ($param == null) {
             $events = DB::table('events')->orderBy('dateEnd', 'desc')->get();
-        }
-        else
-        {
+        } else {
             $events = DB::table('events')->where('type', '=', $param)->orderBy('dateEnd', 'desc')->get();
         }
-        
-        foreach ($events as $event)
-        {
+
+        foreach ($events as $event) {
             $event->dateStart = $this->dateTimeFormat($event->dateStart, "Add Week");
             $event->dateEnd = $this->dateTimeFormat($event->dateEnd, "Add Week");
-            
+
             $count = DB::table('participants')->where('event_id', $event->event_id)->count(); //計算該活動有多少人報名
-            
-            if($event->maximum != 0) {
+
+            if ($event->maximum != 0) {
                 $event->count = $count;
-                
-                if($count == $event->maximum) {
+
+                if ($count == $event->maximum) {
                     $event->status = "已額滿";
                     continue;
                 }
             }
 
-            if(date('Y-m-d H:i:s', strtotime($event->enrollDeadline)) <= date('Y-m-d H:i:s')) {
+            if (date('Y-m-d H:i:s', strtotime($event->enrollDeadline)) <= date('Y-m-d H:i:s')) {
                 $event->status = "已截止";
                 continue;
             }
@@ -102,13 +100,13 @@ class EventController extends Controller
         return redirect('/');
     }
 
-    public function edit(Event $event) 
+    public function edit(Event $event)
     {
         $this->checkTypesPermission();
         $tags = DB::table('tags')->where('event_id', $event->event_id)->pluck('name')->toArray();
         $limits = DB::table('limits')->where('event_id', $event->event_id)->pluck('identify')->toArray();
         return view('events.edit', [
-            'targets' => $this->targets, 
+            'targets' => $this->targets,
             'types' => $this->types,
             'tags' => $tags,
             'event' => $event,
@@ -116,7 +114,7 @@ class EventController extends Controller
         ]);
     }
 
-    public function update(Event $event) 
+    public function update(Event $event)
     {
         $this->dbwriter(request(), $event);
         return redirect('/');
@@ -142,7 +140,7 @@ class EventController extends Controller
             'targets' => ['required'],
             'type' => ['required']
         ]);
-        
+
         $data['poster'] = Auth::user()->type;
         $data['created_at'] = now();
         $data['updated_at'] = $data['created_at'];
@@ -153,13 +151,11 @@ class EventController extends Controller
 
         $data['moreInfo'] = Purifier::clean($request->moreInfo);
 
-        if($request->has('indexImage')) 
-        {
+        if ($request->has('indexImage')) {
             $this->storeImage($request, $data);
         }
-        
-        if(isset($event))
-        {
+
+        if (isset($event)) {
             Storage::delete($event->imageName);
             DB::table('events')->where('event_id', $event->event_id)
                 ->update([
@@ -176,17 +172,16 @@ class EventController extends Controller
                     'updated_at' => $data['updated_at']
                 ]);
 
-            if(isset($data['imageName']))
-            {
+            if (isset($data['imageName'])) {
                 DB::table('events')->where('event_id', $event->event_id)
                     ->update(['imageName' => $data['imageName']]);
             }
-            
+
             DB::table('tags')->where('event_id', $event->event_id)->delete();
             DB::table('limits')->where('event_id', $event->event_id)->delete();
         }
 
-        
+
         $event_id = isset($event) ? $event->event_id : DB::table('events')->insertGetId([
             'title' => $data['title'],
             'slogan' => $data['slogan'],
@@ -202,11 +197,10 @@ class EventController extends Controller
             'created_at' => $data['created_at'],
             'updated_at' => $data['updated_at'],
         ]);
-        
+
         $data['tags'] = explode(" ", $request->tags);
 
-        foreach ($data['tags'] as $tag)
-        {
+        foreach ($data['tags'] as $tag) {
             DB::table('tags')->insert([
                 'event_id' => $event_id,
                 'name' => $tag,
@@ -215,8 +209,7 @@ class EventController extends Controller
             ]);
         }
 
-        foreach ($data['targets'] as $target)
-        {
+        foreach ($data['targets'] as $target) {
             DB::table('limits')->insert([
                 'event_id' => $event_id,
                 'identify' => $target,
@@ -226,7 +219,7 @@ class EventController extends Controller
         }
     }
 
-    private function storeImage(Request $request, &$data) 
+    private function storeImage(Request $request, &$data)
     {
         $path = $request->indexImage->store('image/index', 'public');
         $fileName = substr($path, strlen('image/index/'));
@@ -234,45 +227,41 @@ class EventController extends Controller
         $this->imageResize($fileName);
     }
 
-    private function imageResize($fileName) 
+    private function imageResize($fileName)
     {
-        $img = Image::make(public_path('/storage/image/index/').$fileName);
-        $img->resize(300, 107)->save(public_path('/storage/image/index/').$fileName);
+        $img = Image::make(public_path('/storage/image/index/') . $fileName);
+        $img->resize(300, 107)->save(public_path('/storage/image/index/') . $fileName);
     }
 
     public function signup(Event $event, User $user)
     {
         $parts = DB::table('participants')->where('event_id', $event->event_id)->count();
 
-        if(now() > date($event->enrollDeadline) || $parts >= $event->maximum) //如果報名時間已截止或人數已額滿
-        {    
-            return "<script>alert('報名時間已過或人數已額滿'); window.location.href='/events/".$event->event_id."';</script>";
+        if (now() > date($event->enrollDeadline) || $parts >= $event->maximum) //如果報名時間已截止或人數已額滿
+        {
+            return "<script>alert('報名時間已過或人數已額滿'); window.location.href='/events/" . $event->event_id . "';</script>";
         }
 
         $isInLimit = DB::table('limits')
-                        ->where("identify", "=", $user->identify)
-                        ->where("event_id", "=", $event->event_id)->get()->isEmpty();
-        
-        if($isInLimit)
-        {
-            return "<script>alert('您不符合參加資格，請確認您是否在活動對象的名單中'); window.location.href='/events/".$event->event_id."';</script>";
+            ->where("identify", "=", $user->identify)
+            ->where("event_id", "=", $event->event_id)->get()->isEmpty();
+
+        if ($isInLimit) {
+            return "<script>alert('您不符合參加資格，請確認您是否在活動對象的名單中'); window.location.href='/events/" . $event->event_id . "';</script>";
         }
-        
+
         $user_id = $user->user_id;
         $created_at = now();
         $updated_at = $created_at;
 
-        if($this->isSignUp($user_id, $event->event_id))
-        {
+        if ($this->isSignUp($user_id, $event->event_id)) {
             DB::table('participants')->insert([
-                'event_id' => $event->event_id, 
+                'event_id' => $event->event_id,
                 'user_id' => $user_id,
                 'created_at' => $created_at,
                 'updated_at' => $updated_at
             ]);
-        }
-        else
-        {
+        } else {
             DB::table('participants')->where('event_id', $event->event_id)->where('user_id', $user_id)->delete();
         }
 
@@ -285,20 +274,17 @@ class EventController extends Controller
         $created_at = now();
         $updated_at = $created_at;
 
-        if($this->isAddInFavorite($user_id, $event->event_id))
-        {
+        if ($this->isAddInFavorite($user_id, $event->event_id)) {
             DB::table('collections')->insert([
-                'event_id' => $event->event_id, 
+                'event_id' => $event->event_id,
                 'user_id' => $user_id,
                 'created_at' => $created_at,
                 'updated_at' => $updated_at
             ]);
-        }
-        else
-        {
+        } else {
             DB::table('collections')->where('event_id', $event->event_id)->where('user_id', $user_id)->delete();
         }
-        
+
         return redirect()->back();
     }
 
@@ -314,17 +300,15 @@ class EventController extends Controller
 
     private function checkTypesPermission()
     {
-        if(Auth::user()->type == "系會")
-        {
+        if (Auth::user()->type == "系會") {
             $key = array_search("系辦", $this->types);
             unset($this->types[$key]);
         }
     }
 
-    public function dateTimeFormat($dateString, $option)
+    private function dateTimeFormat($dateString, $option)
     {
-        if($option == "Add Week")
-        {
+        if ($option == "Add Week") {
             $weekMap = [
                 0 => '日',
                 1 => '一',
@@ -334,18 +318,17 @@ class EventController extends Controller
                 5 => '五',
                 6 => '六',
             ];
-    
+
             $dayOfTheWeek = Carbon::parse($dateString)->dayOfWeek;
             $date = explode(" ", $dateString);
-            return $date[0]. "(" . $weekMap[$dayOfTheWeek] . ") " . substr($date[1], 0 , 5);
+            return $date[0] . "(" . $weekMap[$dayOfTheWeek] . ") " . substr($date[1], 0, 5);
         }
-        
-        if($option == "Google Calendar")
-        {
+
+        if ($option == "Google Calendar") {
             /**
              * 因為Google Calendar會自動將輸入時間格式轉成使用者所在時區的時間，故要先減掉8小時
              */
-            return Carbon::parse($dateString)->format("Ymd")."T".Carbon::parse($dateString)->subHours(8)->format("His")."Z";
+            return Carbon::parse($dateString)->format("Ymd") . "T" . Carbon::parse($dateString)->subHours(8)->format("His") . "Z";
         }
     }
 }
