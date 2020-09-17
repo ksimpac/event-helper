@@ -75,3 +75,13 @@ mix.copyDirectory(
     "node_modules/@fortawesome/fontawesome-free/webfonts/",
     "public/node_modules/fontawesome-free/webfonts"
 );
+
+mix.copy(
+    "node_modules/jquery/dist/jquery.min.js",
+    "public/node_modules/jquery/jquery.min.js"
+);
+
+mix.copy(
+    "node_modules/jquery-circle-progress/dist/circle-progress.min.js",
+    "public/node_modules/jquery-circle-progress/circle-progress.min.js"
+);

@@ -9,5 +9,7 @@
     "/node_modules/tinymce/jquery.tinymce.min.js": "/node_modules/tinymce/jquery.tinymce.min.js",
     "/node_modules/tinymce/tinymce.js": "/node_modules/tinymce/tinymce.js",
     "/node_modules/tinymce/tinymce.min.js": "/node_modules/tinymce/tinymce.min.js",
-    "/node_modules/fontawesome-free/css/all.min.css": "/node_modules/fontawesome-free/css/all.min.css"
+    "/node_modules/fontawesome-free/css/all.min.css": "/node_modules/fontawesome-free/css/all.min.css",
+    "/node_modules/jquery/jquery.min.js": "/node_modules/jquery/jquery.min.js",
+    "/node_modules/jquery-circle-progress/circle-progress.min.js": "/node_modules/jquery-circle-progress/circle-progress.min.js"
 }

@@ -17,10 +17,6 @@
               <i class="far fa-clock fa-1x"></i>{{ $event->dateEnd }}<br />
             </p>
 
-            <div class="progress @if(!isset($event->count)) invisible @endif">
-              <div class="progress-bar" role="progressbar" @if(isset($event->count)) style="width: {{ strval(round($event->count / $event->maximum * 100, 0)) }}%;" aria-valuenow="{{ strval(round($event->count / $event->maximum * 100 , 0)) }}" @endif aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-
           </div>
           <div class="card-footer d-flex">
             @if(Request::is('admin'))
@@ -52,3 +48,26 @@
         <h1>目前尚無新增任何活動</h1>
       @endif
   @endforelse
+
+	<script>
+        var events = <?php echo $events; ?>;
+        var doms = Object.values(document.getElementsByClassName("card-body text-center"));
+
+        $.each(doms, function(index, value){
+            var node = document.createElement("div");
+
+            events[index].maximum != 0 ? node.setAttribute("class", "d-flex justify-content-end") : node.setAttribute("class", "invisible");
+            var percent = events[index].maximum == 0 ? 0 : Number(events[index].count / events[index].maximum).toFixed(2);
+
+            $(node).circleProgress({
+                value: percent,
+                size: 25,
+                fill: {
+                    gradient: ["red", "orange"]
+                },
+                startAngle: 1.5 * Math.PI
+            });
+
+            value.appendChild(node);
+        });
+	</script>

@@ -25,6 +25,7 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.14.0",
         "flatpickr": "^4.6.6",
+        "jquery-circle-progress": "^1.2.2",
         "tinymce": "^5.4.2"
     }
 }
