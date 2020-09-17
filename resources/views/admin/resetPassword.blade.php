@@ -8,14 +8,14 @@
                 <div class="card-header">重設密碼</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/changePassword">
+                    <form method="POST" action="{{ route('admin.resetPassword.update') }}">
                         @csrf
-
+                        @method('PATCH')
                         <div class="form-group row">
                             <label for="account" class="col-md-4 col-form-label text-md-right">{{ __('Account') }}</label>
 
                             <div class="col-md-6">
-                                <input id="account" type="text" class="form-control @error('account') is-invalid @enderror" name="account" required autocomplete="off" placeholder="請輸入10~30個字元">
+                                <input id="account" type="text" class="form-control @error('account') is-invalid @enderror" name="account" required autocomplete="off">
 
                                 @error('account')
                                     <span class="invalid-feedback" role="alert">
@@ -29,7 +29,7 @@
                             <label for="new-password" class="col-md-4 col-form-label text-md-right">新密碼</label>
 
                             <div class="col-md-6">
-                                <input id="new-password" type="new-password" class="form-control @error('new-password') is-invalid @enderror" name="new-password" required autocomplete="new-password">
+                                <input id="new-password" type="password" class="form-control @error('new-password') is-invalid @enderror" name="new-password" required autocomplete="off">
 
                                 @error('new-password')
                                     <span class="invalid-feedback" role="alert">
@@ -43,7 +43,7 @@
                             <label for="new-password-confirm" class="col-md-4 col-form-label text-md-right">確認新密碼</label>
 
                             <div class="col-md-6">
-                                <input id="new-password-confirm" type="password" class="form-control" name="new-password-confirm" required autocomplete="new-password">
+                                <input id="new-password-confirm" type="password" class="form-control" name="new-password-confirm" required>
                             </div>
                         </div>
 

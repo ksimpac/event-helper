@@ -8,7 +8,7 @@
 					<div class="card-header">{{ __('Register') }}</div>
 
 					<div class="card-body">
-						<form method="POST" action="/admin/register">
+						<form method="POST" action="{{ route('admin.store') }}">
 							@csrf
 
 							<div class="form-group row">
@@ -97,7 +97,7 @@
 										<li class="list-group-item border-0">4.不可使用空白</li>
 										<li class="list-group-item border-0">必須符合以上四個條件</li>
 								</ul>
-							</div>
+              </div>
             </div>
           </form>
         </div>

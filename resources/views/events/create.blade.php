@@ -8,7 +8,7 @@
                     <div class="card-header">建立活動</div>
 
                     <div class="card-body">
-                        <form action="/events" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('event.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             @include('events.form')
                             <button class="btn btn-primary" type="submit">送出</button>

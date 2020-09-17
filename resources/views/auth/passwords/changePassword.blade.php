@@ -8,7 +8,7 @@
                 <div class="card-header">重設密碼</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/changePassword">
+                    <form method="POST" action="{{ route('auth.update') }}">
                         @csrf
 
                         <div class="form-group row">

@@ -29,7 +29,7 @@
             <div class="container">
 
                 <!-- Center Of Navbar -->
-                <a class="navbar-brand text-white mx-auto" href="{{ url('/') }}">
+                <a class="navbar-brand text-white mx-auto" href="{{ route('event.index') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
 

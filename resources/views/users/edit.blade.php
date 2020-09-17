@@ -8,18 +8,18 @@
                 <div class="card-header">個人資料管理</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/user/{{ $user->user_id }}">
+                    <form method="POST" action="{{ route('user.update', ['user' => $user->user_id]) }}">
                         @csrf
                         @method('patch')
 
                         <div class="form-group row">
                             <label for="static_std_id" class="col-md-4 col-form-label text-md-right">學號</label>
-                            
+
                             <div class="col-md-6">
                                 <input type="text" readonly class="form-control-plaintext" id="static_std_id" value="{{ $user->std_id }}">
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <label for="staticRealname" class="col-md-4 col-form-label text-md-right">{{ __('Realname') }}</label>
 
@@ -35,7 +35,7 @@
                               <input type="text" readonly class="form-control-plaintext" id="staticIdentify" value="{{ $user->identify }}">
                             </div>
                         </div>
-												
+
                         <div class="form-group row">
                             <label for="telephone" class="col-md-4 col-form-label text-md-right">{{ __('Telephone') }}</label>
 

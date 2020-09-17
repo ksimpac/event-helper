@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Rules\MatchOldPassword;
-use App\Rules\MatchAccount;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +20,7 @@ class changePasswordController extends Controller
 
         if (Auth::user()->type == "系辦") {
             $data = request()->validate([
-                'account' => ['required', 'string', new MatchAccount],
+                'account' => ['required', 'string', 'exists:users'],
                 'new-password' => ['required', 'string', 'min:10', 'max:30', $regex_pattern],
                 'new-password-confirm' => ['same:new-password']
             ]);

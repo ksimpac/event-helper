@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,31 +18,44 @@ Auth::routes(['verify' => false]);
 
 //Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
-Route::middleware(['auth', 'user'])->group(function() {
-    Route::get('/users/{user}/edit', 'UserController@edit');
-    Route::get('/users/{user}', 'UserController@show');
-    Route::patch('/users/{user}','UserController@update');
-    Route::post('/events/{event}/{user}/signup','EventController@signup');
-    Route::post('/events/{event}/{user}/favorite','EventController@favorite');
+Route::middleware(['auth', 'user'])->group(function () {
+    Route::name('user.')->group(function () {
+        Route::get('/users/{user}/edit', 'UserController@edit')->name('edit');
+        Route::get('/users/{user}', 'UserController@show')->name('show');
+        Route::patch('/users/{user}', 'UserController@update')->name('update');
+        Route::post('/events/{event}/{user}/signup', 'EventController@signup')->name('signup');
+        Route::post('/events/{event}/{user}/favorite', 'EventController@favorite')->name('favorite');
+    });
 });
 
-Route::middleware(['auth', 'admin'])->group(function() {
-    Route::get('/events/create', 'EventController@create');
-    Route::post('/events', 'EventController@store');
-    Route::get('/events/{event}/edit', 'EventController@edit');
-    Route::patch('/events/{event}', 'EventController@update');
-    Route::get('/admin', 'AdminController@index');
-    Route::get('/admin/register' , 'AdminController@register');
-    Route::post('/admin/register', 'AdminController@store');
-    Route::delete('/events/{event}', 'EventController@destroy');
-    Route::get('/events/{event}/export', 'AdminController@export');
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::name('admin.')->group(function () {
+        Route::get('/admin', 'AdminController@index')->name('index');
+        Route::get('/admin/register', 'AdminController@register')->name('register');
+        Route::post('/admin/register', 'AdminController@store')->name('store');
+        Route::get('/admin/resetPassword', 'ChangepasswordController@index')->name('resetPassword.index');
+        Route::patch('/admin/resetPassword', 'ChangepasswordController@update')->name('resetPassword.update');
+    });
+
+    Route::name('event.')->group(function () {
+        Route::get('/events/create', 'EventController@create')->name('create');
+        Route::post('/events', 'EventController@store')->name('store');
+        Route::get('/events/{event}/edit', 'EventController@edit')->name('edit');
+        Route::patch('/events/{event}', 'EventController@update')->name('update');
+        Route::delete('/events/{event}', 'EventController@destroy')->name('destroy');
+        Route::get('/events/{event}/export', 'AdminController@export')->name('export');
+    });
 });
 
-Route::middleware('auth')->group(function(){
-    Route::get('/changePassword', 'ChangePasswordController@index');
-    Route::post('/changePassword', 'ChangePasswordController@update');
+Route::middleware('auth')->group(function () {
+    Route::name('auth.')->group(function () {
+        Route::get('/changePassword', 'ChangepasswordController@index')->name('index');
+        Route::patch('/changePassword', 'ChangepasswordController@update')->name('update');
+    });
 });
 
-Route::get('/', 'EventController@index');
-Route::get('/{param}', 'EventController@index');
-Route::get('/events/{event}', 'EventController@show');
+Route::name('event.')->group(function () {
+    Route::get('/', 'EventController@index')->name('index');
+    Route::get('/{param}', 'EventController@index')->name('index.param');
+    Route::get('/events/{event}', 'EventController@show')->name('show');
+});

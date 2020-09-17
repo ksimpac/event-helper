@@ -23,7 +23,7 @@
               </p>
             </div>
             <div class="card-footer d-flex">
-              <a href="/events/{{ $participant->event_id }}" class="btn btn-primary mr-auto p-2">查看詳情</a>
+              <a href="{{ route('event.show', ['event' => $participant->event_id]) }}" class="btn btn-primary mr-auto p-2">查看詳情</a>
             </div>
           </div>
         </div>
@@ -58,7 +58,7 @@
               </p>
             </div>
             <div class="card-footer d-flex">
-              <a href="/events/{{ $collection->event_id }}" class="btn btn-primary mr-auto p-2">查看詳情</a>
+              <a href="{{ route('event.show', ['event' => $collection->event_id]) }}" class="btn btn-primary mr-auto p-2">查看詳情</a>
             </div>
           </div>
         </div>
