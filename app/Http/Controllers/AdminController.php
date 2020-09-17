@@ -46,8 +46,6 @@ class AdminController extends Controller
     {
         $regex_pattern = 'regex:/^\S*(?=\S{10,30})(?=\S*[a-z])(?=\S*[A-Z])(?![ ])\S*$/';
 
-        dd(request()->all());
-
         $data = request()->validate([
             'account' => ['required', 'string', 'min:10', 'max:30', $regex_pattern, 'unique:users'],
             'type' => ['required'],
