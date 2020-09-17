@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Event;
 use App\Exports\ParticipantExport;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -47,22 +46,18 @@ class AdminController extends Controller
     {
         $regex_pattern = 'regex:/^\S*(?=\S{10,30})(?=\S*[a-z])(?=\S*[A-Z])(?![ ])\S*$/';
 
+        dd(request()->all());
+
         $data = request()->validate([
             'account' => ['required', 'string', 'min:10', 'max:30', $regex_pattern, 'unique:users'],
             'type' => ['required'],
+            'realname' => ['required'],
             'password' => ['required', 'string', 'min:10', 'max:30', $regex_pattern, 'confirmed'],
         ]);
 
         $data['password'] = Hash::make($data['password']);
         $data['created_at'] = now();
         $data['updated_at'] = $data['created_at'];
-
-        if ($data['type'] != "系辦" && $data['type'] != "系會") {
-            $data['realname'] = $data['type'];
-            $data['type'] = "user";
-        } else {
-            $data['realname'] = $data['type'];
-        }
 
         DB::table('users')->insert($data);
         return redirect()->back()->with('successMsg', '帳號建立成功！');
