@@ -44,7 +44,7 @@
 
 <div class="form-group">
   <label for="dateStart">活動開始時間</label>
-  <input type="text" class="form-control datetimepicker-input @error('dateStart') is-invalid @enderror" id="dateStart" data-toggle="datetimepicker" name="dateStart" data-target="#dateStart" placeholder="請選擇時間" value="{{ old('dateStart') ?? $event->dateStart ?? ''}}"/>
+  <input type="text" class="form-control datetimepicker-input @error('dateStart') is-invalid @enderror" id="dateStart" data-toggle="datetimepicker" name="dateStart" data-target="#dateStart" placeholder="請選擇時間" value="{{ old('dateStart') ?? $event->dateStart ?? ''}}" />
   @error('dateStart')
       <span class="invalid-feedback" role="alert">
           <strong>{{ $message }}</strong>

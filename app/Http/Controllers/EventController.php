@@ -153,10 +153,10 @@ class EventController extends Controller
 
         if ($request->has('indexImage')) {
             $this->storeImage($request, $data);
+            Storage::delete($event->imageName);
         }
 
         if (isset($event)) {
-            Storage::delete($event->imageName);
             DB::table('events')->where('event_id', $event->event_id)
                 ->update([
                     'title' => $data['title'],
@@ -237,9 +237,14 @@ class EventController extends Controller
     {
         $parts = DB::table('participants')->where('event_id', $event->event_id)->count();
 
-        if (now() > date($event->enrollDeadline) || $parts >= $event->maximum) //如果報名時間已截止或人數已額滿
+        $user_id = $user->user_id;
+        $created_at = now();
+        $updated_at = $created_at;
+        $isSignUp = $this->isSignUp($user_id, $event->event_id);
+
+        if ((now() > date($event->enrollDeadline) || $parts >= $event->maximum && $event->maximum != 0) && !$isSignUp) //如果報名時間已截止或人數已額滿
         {
-            return "<script>alert('報名時間已過或人數已額滿'); window.location.href='/events/" . $event->event_id . "';</script>";
+            return redirect()->back()->with("errorMsg", "報名時間已過或人數已額滿");
         }
 
         $isInLimit = DB::table('limits')
@@ -247,14 +252,10 @@ class EventController extends Controller
             ->where("event_id", "=", $event->event_id)->get()->isEmpty();
 
         if ($isInLimit) {
-            return "<script>alert('您不符合參加資格，請確認您是否在活動對象的名單中'); window.location.href='/events/" . $event->event_id . "';</script>";
+            return redirect()->back()->with("errorMsg", "您不符合報名資格，請確認您的身分是否符合活動對象的名單中");
         }
 
-        $user_id = $user->user_id;
-        $created_at = now();
-        $updated_at = $created_at;
-
-        if ($this->isSignUp($user_id, $event->event_id)) {
+        if (!$isSignUp) {
             DB::table('participants')->insert([
                 'event_id' => $event->event_id,
                 'user_id' => $user_id,
@@ -274,7 +275,7 @@ class EventController extends Controller
         $created_at = now();
         $updated_at = $created_at;
 
-        if ($this->isAddInFavorite($user_id, $event->event_id)) {
+        if (!$this->isAddInFavorite($user_id, $event->event_id)) {
             DB::table('collections')->insert([
                 'event_id' => $event->event_id,
                 'user_id' => $user_id,
@@ -290,12 +291,12 @@ class EventController extends Controller
 
     private function isSignUp($user_id, $event_id)
     {
-        return DB::table('participants')->where('user_id', $user_id)->where('event_id', $event_id)->get()->isEmpty();
+        return !DB::table('participants')->where('user_id', $user_id)->where('event_id', $event_id)->get()->isEmpty();
     }
 
     private function isAddInFavorite($user_id, $event_id)
     {
-        return DB::table('collections')->where('user_id', $user_id)->where('event_id', $event_id)->get()->isEmpty();
+        return !DB::table('collections')->where('user_id', $user_id)->where('event_id', $event_id)->get()->isEmpty();
     }
 
     private function checkTypesPermission()

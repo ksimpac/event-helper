@@ -10,12 +10,12 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('auth.update') }}">
                         @csrf
-
+                        @method('PATCH')
                         <div class="form-group row">
                             <label for="originalPassword" class="col-md-4 col-form-label text-md-right">原密碼</label>
 
                             <div class="col-md-6">
-                                <input id="originalPassword" type="originalPassword" class="form-control @error('originalPassword') is-invalid @enderror" name="originalPassword" required autocomplete="originalPassword" autofocus>
+                                <input id="originalPassword" type="password" class="form-control @error('originalPassword') is-invalid @enderror" name="originalPassword" required autofocus>
 
                                 @error('originalPassword')
                                     <span class="invalid-feedback" role="alert">
@@ -29,7 +29,7 @@
                             <label for="new-password" class="col-md-4 col-form-label text-md-right">新密碼</label>
 
                             <div class="col-md-6">
-                                <input id="new-password" type="new-password" class="form-control @error('new-password') is-invalid @enderror" name="new-password" required autocomplete="new-password">
+                                <input id="new-password" type="password" class="form-control @error('new-password') is-invalid @enderror" name="new-password" required>
 
                                 @error('new-password')
                                     <span class="invalid-feedback" role="alert">
@@ -43,7 +43,7 @@
                             <label for="new-password-confirm" class="col-md-4 col-form-label text-md-right">確認新密碼</label>
 
                             <div class="col-md-6">
-                                <input id="new-password-confirm" type="password" class="form-control" name="new-password-confirm" required autocomplete="new-password">
+                                <input id="new-password-confirm" type="password" class="form-control" name="new-password-confirm" required>
                             </div>
                         </div>
 
@@ -52,6 +52,9 @@
                                 <button type="submit" class="btn btn-primary">
                                     重設密碼
                                 </button>
+                                @if(Session::has('successMsg'))
+                                    <span class="alert alert-success"> {{ Session::get('successMsg') }}</span>
+                                @endif
                             </div>
                         </div>
 

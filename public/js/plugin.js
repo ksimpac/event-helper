@@ -42,6 +42,8 @@ tinymce.init({
     toolbar_sticky: true,
     image_advtab: true,
     image_caption: true,
+    relative_urls: false,
+    remove_script_host: false,
     quickbars_selection_toolbar:
         "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
     noneditable_noneditable_class: "mceNonEditable",
@@ -55,7 +57,7 @@ tinymce.init({
 
         xhr = new XMLHttpRequest();
         xhr.withCredentials = false;
-        xhr.open("POST", "../php/postAcceptor.php");
+        xhr.open("POST", "/php/postAcceptor.php");
 
         xhr.onload = function() {
             var json;

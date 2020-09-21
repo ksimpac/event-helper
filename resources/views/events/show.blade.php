@@ -38,7 +38,7 @@
                 <span>{{ $tag->name }}@if(!$loop->last) 、 @endif</span>
               @endforeach
             </p>
-            <p class="card-text">活動介紹：<span>{!! html_entity_decode($event->moreInfo) !!}</span></p>
+            <p class="card-text">詳細資訊：<span>{!! html_entity_decode($event->moreInfo) !!}</span></p>
           </div>
         </div>
       </div>
@@ -48,7 +48,7 @@
       <form action="{{ route('user.signup', ['event' => $event->event_id, 'user' => Auth::id() == null ? -1 : Auth::id()]) }}" method="post">
         @csrf
         <button class="btn btn-primary mr-2" @if(now() > $event->enrollDeadline || Auth::check() && (Auth::user()->type == "系辦" || Auth::user()->type == "系會")) disabled @endif>
-          @if($isSignUp && $parts < $event->maximum)
+          @if(!$isSignUp)
             報名
           @else
             取消報名
@@ -58,7 +58,7 @@
       <form action="{{ route('user.favorite', ['event' => $event->event_id, 'user' => Auth::id() == null ? -1 : Auth::id()]) }}" method="post">
         @csrf
         <button class="btn btn-primary" @if(Auth::check() && (Auth::user()->type == "系辦" || Auth::user()->type == "系會")) disabled @endif>
-          @if($isAddInFavorite)
+          @if(!$isAddInFavorite)
             收藏
           @else
             取消收藏
@@ -68,5 +68,10 @@
       <a class="btn btn-primary ml-2" target="_blank"
         href="https://calendar.google.com/calendar/event?action=TEMPLATE&text={{ $event->title }}&dates={{ $event->dateStartStr }}/{{ $event->dateEndStr }}&location={{ $event->location }}&trp=false">新增至Google行事曆</a>
     </div>
+    @if(Session::has('errorMsg'))
+      <div class="row ml-1 mt-2">
+          <span class="alert alert-danger"> {{ Session::get('errorMsg') }}</span>
+      </div>
+    @endif
 </div>
 @endsection

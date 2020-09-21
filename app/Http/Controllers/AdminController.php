@@ -57,6 +57,11 @@ class AdminController extends Controller
         $data['created_at'] = now();
         $data['updated_at'] = $data['created_at'];
 
+        if ($data['type'] != "系辦" && $data['type'] != "系會") {
+            $data['identify'] = $data['type'];
+            $data['type'] = 'user';
+        }
+
         DB::table('users')->insert($data);
         return redirect()->back()->with('successMsg', '帳號建立成功！');
     }

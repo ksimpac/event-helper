@@ -33,7 +33,7 @@ class UserController extends Controller
         }
 
 
-        return redirect()->back();
+        return redirect()->back()->with('successMsg', '修改成功');
     }
 
     public function show(User $user)

@@ -52,6 +52,9 @@
                                 <button type="submit" class="btn btn-primary">
                                     重設密碼
                                 </button>
+                                @if(Session::has('successMsg'))
+                                    <span class="alert alert-success"> {{ Session::get('successMsg') }}</span>
+                                @endif
                             </div>
                         </div>
 

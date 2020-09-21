@@ -20,7 +20,7 @@
           </div>
           <div class="card-footer d-flex">
             @if(Request::is('admin'))
-                <a href="/events/{{ $event->event_id }}" class="btn btn-primary mr-auto p-2">查看</a>
+                <a href="{{ route('event.show', ['event' => $event->event_id]) }}" class="btn btn-primary mr-auto p-2">查看</a>
                 <a href="{{ route('event.edit', ['event' => $event->event_id]) }}" class="btn btn-warning mr-auto p-2">修改</a>
                 <a href="{{ route('event.export', ['event' => $event->event_id]) }}" class="btn btn-info mr-auto p-2">名單</a>
                 <form action="{{ route('event.destroy', ['event' => $event->event_id]) }}" method="post">
@@ -29,7 +29,7 @@
                     <button type="submit" class="btn btn-danger mr-auto p-2" onclick="return confirm('您確定要刪除此活動?\n此動作將無法還原');">刪除</button>
                 </form>
             @else
-                <a href="./events/{{ $event->event_id }}" class="btn btn-primary mr-auto p-2">查看詳情</a>
+                <a href="{{ route('event.show', ['event' => $event->event_id]) }}" class="btn btn-primary mr-auto p-2">查看詳情</a>
                 <span class="card-text p-2">{{ $event->status }}</span>
             @endif
           </div>

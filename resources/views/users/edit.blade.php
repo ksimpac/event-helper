@@ -16,7 +16,7 @@
                             <label for="static_std_id" class="col-md-4 col-form-label text-md-right">學號</label>
 
                             <div class="col-md-6">
-                                <input type="text" readonly class="form-control-plaintext" id="static_std_id" value="{{ $user->std_id }}">
+                                <input type="text" readonly class="form-control-plaintext" id="static_std_id" value="{{ $user->std_id ?? "無" }}">
                             </div>
                         </div>
 
@@ -69,6 +69,9 @@
                                 <button type="submit" class="btn btn-primary">
                                     修改
                                 </button>
+                                @if(Session::has('successMsg'))
+                                    <span class="alert alert-success"> {{ Session::get('successMsg') }}</span>
+                                @endif
                             </div>
                         </div>
                     </form>

@@ -37,5 +37,7 @@ class changePasswordController extends Controller
         DB::table('users')->where('account', $data['account'])->update([
             "password" => Hash::make($data['new-password'])
         ]);
+
+        return redirect()->back()->with('successMsg', '密碼更改成功');
     }
 }
