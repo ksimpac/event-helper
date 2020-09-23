@@ -72,13 +72,13 @@ class EventController extends Controller
         return view('events.index', compact('events', 'param'));
     }
 
-    public function create()
+    public function create() //新增活動
     {
         $this->checkTypesPermission();
         return view('events.create', ['targets' => $this->targets, 'types' => $this->types]);
     }
 
-    public function show(Event $event)
+    public function show(Event $event) //顯示活動資訊
     {
         $parts = DB::table('participants')->where('event_id', $event->event_id)->count();
         $tags = DB::table('tags')->where('event_id', $event->event_id)->get('name');
@@ -94,95 +94,11 @@ class EventController extends Controller
         return view('events.show', compact('parts', 'event', 'tags', 'limits', 'isSignUp', 'isAddInFavorite'));
     }
 
-    public function store()
+    public function store() //儲存活動
     {
-        $this->dbwriter(request());
-        return redirect('/');
-    }
+        $data = $this->process(request());
 
-    public function edit(Event $event)
-    {
-        $this->checkTypesPermission();
-        $tags = DB::table('tags')->where('event_id', $event->event_id)->pluck('name')->toArray();
-        $limits = DB::table('limits')->where('event_id', $event->event_id)->pluck('identify')->toArray();
-        return view('events.edit', [
-            'targets' => $this->targets,
-            'types' => $this->types,
-            'tags' => $tags,
-            'event' => $event,
-            'limits' => $limits
-        ]);
-    }
-
-    public function update(Event $event)
-    {
-        $this->dbwriter(request(), $event);
-        return redirect('/');
-    }
-
-    public function destroy(Event $event)
-    {
-        Storage::delete($event->imageName);
-        DB::table('events')->where('event_id', $event->event_id)->delete();
-    }
-
-    private function dbwriter(Request $request, Event $event = null)
-    {
-        $data = $request->validate([
-            'indexImage' => isset($event) ? ['image', 'mimes:jpeg,jpg,png', 'max:1024'] : ['required', 'image', 'mimes:jpeg,jpg,png', 'max:1024'],
-            'title' => ['required', 'max:100'],
-            'slogan' => ['required', 'max:100'],
-            'location' => ['required', 'max:100'],
-            'dateStart' => ['required', 'date_format:Y-m-d H:i', 'after:date'],
-            'dateEnd' => ['required', 'date_format:Y-m-d H:i', 'after:dateStart'],
-            'enrollDeadline' => ['required', 'date_format:Y-m-d H:i', 'after:date', 'before:dateStart'],
-            'maximum' => ['required', 'integer', 'min:0'],
-            'targets' => ['required'],
-            'type' => ['required']
-        ]);
-
-        $data['poster'] = Auth::user()->type;
-        $data['created_at'] = now();
-        $data['updated_at'] = $data['created_at'];
-
-        /**
-         * Purifier is a anti XSS attack tool
-         */
-
-        $data['moreInfo'] = Purifier::clean($request->moreInfo);
-
-        if ($request->has('indexImage')) {
-            $this->storeImage($request, $data);
-            Storage::delete($event->imageName);
-        }
-
-        if (isset($event)) {
-            DB::table('events')->where('event_id', $event->event_id)
-                ->update([
-                    'title' => $data['title'],
-                    'slogan' => $data['slogan'],
-                    'location' => $data['location'],
-                    'dateStart' => $data['dateStart'],
-                    'dateEnd' => $data['dateEnd'],
-                    'enrollDeadline' => $data['enrollDeadline'],
-                    'maximum' => $data['maximum'],
-                    'type' => $data['type'],
-                    'poster' => $data['poster'],
-                    'moreInfo' => $data['moreInfo'],
-                    'updated_at' => $data['updated_at']
-                ]);
-
-            if (isset($data['imageName'])) {
-                DB::table('events')->where('event_id', $event->event_id)
-                    ->update(['imageName' => $data['imageName']]);
-            }
-
-            DB::table('tags')->where('event_id', $event->event_id)->delete();
-            DB::table('limits')->where('event_id', $event->event_id)->delete();
-        }
-
-
-        $event_id = isset($event) ? $event->event_id : DB::table('events')->insertGetId([
+        $event_id = DB::table('events')->insertGetId([
             'title' => $data['title'],
             'slogan' => $data['slogan'],
             'location' => $data['location'],
@@ -198,28 +114,114 @@ class EventController extends Controller
             'updated_at' => $data['updated_at'],
         ]);
 
-        $data['tags'] = explode(" ", $request->tags);
+        $this->tags_n_limit($data, $event_id);
 
-        foreach ($data['tags'] as $tag) {
-            DB::table('tags')->insert([
-                'event_id' => $event_id,
-                'name' => $tag,
-                'created_at' => $data['created_at'],
-                'updated_at' => $data['updated_at']
-            ]);
-        }
-
-        foreach ($data['targets'] as $target) {
-            DB::table('limits')->insert([
-                'event_id' => $event_id,
-                'identify' => $target,
-                'created_at' => $data['created_at'],
-                'updated_at' => $data['updated_at']
-            ]);
-        }
+        return redirect('/');
     }
 
-    private function storeImage(Request $request, &$data)
+    public function edit(Event $event) //編輯活動
+    {
+        $this->checkTypesPermission();
+        $tags = DB::table('tags')->where('event_id', $event->event_id)->pluck('name')->toArray();
+        $limits = DB::table('limits')->where('event_id', $event->event_id)->pluck('identify')->toArray();
+        return view('events.edit', [
+            'targets' => $this->targets,
+            'types' => $this->types,
+            'tags' => $tags,
+            'event' => $event,
+            'limits' => $limits
+        ]);
+    }
+
+    public function update(Event $event) //更新活動
+    {
+        $data = $this->process(request(), $event);
+
+        Storage::delete($event->imageName);
+
+        DB::table('events')->where('event_id', $event->event_id)
+            ->update([
+                'title' => $data['title'],
+                'slogan' => $data['slogan'],
+                'location' => $data['location'],
+                'dateStart' => $data['dateStart'],
+                'dateEnd' => $data['dateEnd'],
+                'enrollDeadline' => $data['enrollDeadline'],
+                'maximum' => $data['maximum'],
+                'type' => $data['type'],
+                'poster' => $data['poster'],
+                'moreInfo' => $data['moreInfo'],
+                'updated_at' => $data['updated_at']
+        ]);
+
+        if(isset($data['imageName']))
+        {
+            DB::table('events')
+                ->where('event_id', $event->event_id)
+                ->update(['imageName' => $data['imageName']]);
+        }
+
+
+
+        $old_targets = DB::table('limits')->where('event_id', $event->event_id)->pluck('identify');
+        $lists = $old_targets->diff($data['targets']);
+
+        if($lists != null && $old_targets->count() >= count($data['targets']))
+        {
+            foreach($lists as $list)
+            {
+                DB::table('participants')
+                    ->join('users', 'users.user_id', '=', 'participants.user_id')
+                    ->where('users.identify', '=', $list)
+                    ->delete();
+            }
+        }
+
+        DB::table('tags')->where('event_id', $event->event_id)->delete();
+        DB::table('limits')->where('event_id', $event->event_id)->delete();
+        $this->tags_n_limit($data, $event->event_id);
+
+        return redirect('/');
+    }
+
+    public function destroy(Event $event) //刪除活動
+    {
+        Storage::delete($event->imageName);
+        DB::table('events')->where('event_id', $event->event_id)->delete();
+    }
+
+    private function process(Request $request, Event $event = null) //資料驗證及處理
+    {
+        $data = $request->validate([
+            'indexImage' => isset($event) ? ['image', 'mimes:jpeg,jpg,png', 'max:1024'] : ['required', 'image', 'mimes:jpeg,jpg,png', 'max:1024'],
+            'title' => ['required', 'max:100'],
+            'slogan' => ['required', 'max:100'],
+            'location' => ['required', 'max:100'],
+            'dateStart' => ['required', 'date_format:Y-m-d H:i', 'after:date'],
+            'dateEnd' => ['required', 'date_format:Y-m-d H:i', 'after:dateStart'],
+            'enrollDeadline' => ['required', 'date_format:Y-m-d H:i', 'after:date', 'before:dateStart'],
+            'maximum' => ['required', 'integer', 'min:0'],
+            'targets' => ['required', 'array'],
+            'type' => ['required'],
+        ]);
+
+        $data['poster'] = Auth::user()->type;
+        $data['created_at'] = now();
+        $data['updated_at'] = $data['created_at'];
+
+        /**
+         * Purifier is a anti XSS attack tool
+         */
+
+        $data['moreInfo'] = Purifier::clean($request->moreInfo);
+        $data['tags'] = $request->tags;
+
+        if (isset($data['indexImage'])) $this->storeImage($request, $data);
+
+        return $data;
+    }
+
+    private function storeImage(Request $request, &$data) //圖片儲存
     {
         $path = $request->indexImage->store('image/index', 'public');
         $fileName = substr($path, strlen('image/index/'));
@@ -227,13 +229,13 @@ class EventController extends Controller
         $this->imageResize($fileName);
     }
 
-    private function imageResize($fileName)
+    private function imageResize($fileName) //調整首頁縮圖
     {
         $img = Image::make(public_path('/storage/image/index/') . $fileName);
         $img->resize(300, 107)->save(public_path('/storage/image/index/') . $fileName);
     }
 
-    public function signup(Event $event, User $user)
+    public function signup(Event $event, User $user) //使用者報名
     {
         $parts = DB::table('participants')->where('event_id', $event->event_id)->count();
 
@@ -269,7 +271,7 @@ class EventController extends Controller
         return redirect()->back();
     }
 
-    public function favorite(Event $event, User $user)
+    public function favorite(Event $event, User $user) //新增活動至該使用者的收藏
     {
         $user_id = $user->user_id;
         $created_at = now();
@@ -289,17 +291,17 @@ class EventController extends Controller
         return redirect()->back();
     }
 
-    private function isSignUp($user_id, $event_id)
+    private function isSignUp($user_id, $event_id) //檢查使用者是否有報名活動
     {
         return !DB::table('participants')->where('user_id', $user_id)->where('event_id', $event_id)->get()->isEmpty();
     }
 
-    private function isAddInFavorite($user_id, $event_id)
+    private function isAddInFavorite($user_id, $event_id) //檢查使用者是否有將活動新增至自己的清單
     {
         return !DB::table('collections')->where('user_id', $user_id)->where('event_id', $event_id)->get()->isEmpty();
     }
 
-    private function checkTypesPermission()
+    private function checkTypesPermission() //新增活動權限管理
     {
         if (Auth::user()->type == "系會") {
             $key = array_search("系辦", $this->types);
@@ -307,7 +309,7 @@ class EventController extends Controller
         }
     }
 
-    private function dateTimeFormat($dateString, $option)
+    private function dateTimeFormat($dateString, $option) //時間格式
     {
         if ($option == "Add Week") {
             $weekMap = [
@@ -330,6 +332,29 @@ class EventController extends Controller
              * 因為Google Calendar會自動將輸入時間格式轉成使用者所在時區的時間，故要先減掉8小時
              */
             return Carbon::parse($dateString)->format("Ymd") . "T" . Carbon::parse($dateString)->subHours(8)->format("His") . "Z";
+        }
+    }
+
+    private function tags_n_limit($data, $event_id)
+    {
+        $data['tags'] = explode(" ", $data['tags']);
+
+        foreach ($data['tags'] as $tag) {
+            DB::table('tags')->insert([
+                'event_id' => $event_id,
+                'name' => $tag,
+                'created_at' => $data['created_at'],
+                'updated_at' => $data['updated_at']
+            ]);
+        }
+
+        foreach ($data['targets'] as $target) {
+            DB::table('limits')->insert([
+                'event_id' => $event_id,
+                'identify' => $target,
+                'created_at' => $data['created_at'],
+                'updated_at' => $data['updated_at']
+            ]);
         }
     }
 }

@@ -34,11 +34,13 @@
             <p class="card-text">報名截止時間：<span>{{ $event->enrollDeadline }}</span></p>
 
             <p class="card-text">標籤：
-              @foreach($tags as $tag)
+              @forelse($tags as $tag)
                 <span>{{ $tag->name }}@if(!$loop->last) 、 @endif</span>
-              @endforeach
+              @empty
+                <span>無</span>
+              @endforelse
             </p>
-            <p class="card-text">詳細資訊：<span>{!! html_entity_decode($event->moreInfo) !!}</span></p>
+            <p class="card-text">詳細資訊：<span>@if($event->moreInfo == null) 無 @else {!! html_entity_decode($event->moreInfo) !!} @endif</span></p>
           </div>
         </div>
       </div>
