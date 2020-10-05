@@ -188,6 +188,7 @@ class EventController extends Controller
     {
         Storage::delete($event->imageName);
         DB::table('events')->where('event_id', $event->event_id)->delete();
+        return redirect()->back();
     }
 
     private function process(Request $request, Event $event = null) //資料驗證及處理
@@ -214,7 +215,7 @@ class EventController extends Controller
          */
 
         $data['moreInfo'] = Purifier::clean($request->moreInfo);
-        $data['tags'] = $request->tags;
+        $data['tags'] = str_replace("  ", " ", $request->tags);
 
         if (isset($data['indexImage'])) $this->storeImage($request, $data);
 
@@ -337,15 +338,19 @@ class EventController extends Controller
 
     private function tags_n_limit($data, $event_id)
     {
+
         $data['tags'] = explode(" ", $data['tags']);
 
-        foreach ($data['tags'] as $tag) {
-            DB::table('tags')->insert([
-                'event_id' => $event_id,
-                'name' => $tag,
-                'created_at' => $data['created_at'],
-                'updated_at' => $data['updated_at']
-            ]);
+        if($data['tags'][0] != "")
+        {
+            foreach ($data['tags'] as $tag) {
+                DB::table('tags')->insert([
+                    'event_id' => $event_id,
+                    'name' => $tag,
+                    'created_at' => $data['created_at'],
+                    'updated_at' => $data['updated_at']
+                ]);
+            }
         }
 
         foreach ($data['targets'] as $target) {

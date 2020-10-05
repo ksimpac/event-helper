@@ -8,13 +8,13 @@
       </ol>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="{{ Storage::url('/image/carousel/230497.jpg') }}" class="d-block w-100">
+          <img src="{{ asset(Storage::url('image/carousel/230497.jpg')) }}" class="d-block w-100">
         </div>
         <div class="carousel-item">
-          <img src="{{ Storage::url('/image/carousel/230497.jpg') }}" class="d-block w-100">
+          <img src="{{ asset(Storage::url('image/carousel/230497.jpg')) }}" class="d-block w-100">
         </div>
         <div class="carousel-item">
-          <img src="{{ Storage::url('/image/carousel/230497.jpg') }}" class="d-block w-100">
+          <img src="{{ asset(Storage::url('image/carousel/230497.jpg')) }}" class="d-block w-100">
         </div>
       </div>
 
