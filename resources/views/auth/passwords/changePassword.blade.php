@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">重設密碼</div>
+                <div class="card-header">更改密碼</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('auth.update') }}">

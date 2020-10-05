@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">建立活動</div>
+                    <div class="card-header">新增活動</div>
 
                     <div class="card-body">
                         <form action="{{ route('event.store') }}" method="post" enctype="multipart/form-data">

@@ -50,6 +50,11 @@ class EventController extends Controller
 
             $count = DB::table('participants')->where('event_id', $event->event_id)->count(); //計算該活動有多少人報名
 
+            if (date('Y-m-d H:i:s', strtotime($event->enrollDeadline)) <= date('Y-m-d H:i:s')) {
+                $event->status = "已截止";
+                continue;
+            }
+
             if ($event->maximum != 0) {
                 $event->count = $count;
 
@@ -57,11 +62,6 @@ class EventController extends Controller
                     $event->status = "已額滿";
                     continue;
                 }
-            }
-
-            if (date('Y-m-d H:i:s', strtotime($event->enrollDeadline)) <= date('Y-m-d H:i:s')) {
-                $event->status = "已截止";
-                continue;
             }
 
             $event->status = "開放報名中";
