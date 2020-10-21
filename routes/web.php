@@ -33,8 +33,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/admin', 'AdminController@index')->name('index');
         Route::get('/admin/register', 'AdminController@register')->name('register');
         Route::post('/admin/register', 'AdminController@store')->name('store');
-        Route::get('/admin/resetPassword', 'ChangepasswordController@index')->name('resetPassword.index');
-        Route::patch('/admin/resetPassword', 'ChangepasswordController@update')->name('resetPassword.update');
+        Route::get('/admin/resetPassword', 'changePasswordController@index')->name('resetPassword.index');
+        Route::patch('/admin/resetPassword', 'changePasswordController@update')->name('resetPassword.update');
     });
 
     Route::name('event.')->group(function () {
@@ -49,8 +49,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::name('auth.')->group(function () {
-        Route::get('/changePassword', 'ChangepasswordController@index')->name('index');
-        Route::patch('/changePassword', 'ChangepasswordController@update')->name('update');
+        Route::get('/changePassword', 'changePasswordController@index')->name('index');
+        Route::patch('/changePassword', 'changePasswordController@update')->name('update');
     });
 });
 
