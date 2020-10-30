@@ -28,13 +28,14 @@ Route::middleware(['auth', 'user'])->group(function () {
     });
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'manager'])->group(function () {
     Route::name('admin.')->group(function () {
         Route::get('/admin', 'AdminController@index')->name('index');
         Route::get('/admin/register', 'AdminController@register')->name('register');
         Route::post('/admin/register', 'AdminController@store')->name('store');
         Route::get('/admin/resetPassword', 'changePasswordController@index')->name('resetPassword.index');
         Route::patch('/admin/resetPassword', 'changePasswordController@update')->name('resetPassword.update');
+
     });
 
     Route::name('event.')->group(function () {
@@ -44,6 +45,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::patch('/events/{event}', 'EventController@update')->name('update');
         Route::delete('/events/{event}', 'EventController@destroy')->name('destroy');
         Route::get('/events/{event}/export', 'AdminController@export')->name('export');
+    });
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::name('admin.')->group(function () {
+        Route::get('/admin/forgotAccount', 'Auth\ForgotAccountController@index')->name('forgotPassword.index');
+        Route::post('/admin/forgotAccount', 'Auth\ForgotAccountController@getInfo')->name('forgotPassword.getInfo');
     });
 });
 

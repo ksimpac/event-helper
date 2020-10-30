@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class Admin
+class Manager
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class Admin
     public function handle($request, Closure $next)
     {
         $user = Auth::user();
-        if($user->type != "系辦") return abort(403);
+        if($user->type != "系辦" && $user->type != "系會") return abort(403);
         return $next($request);
     }
 }
