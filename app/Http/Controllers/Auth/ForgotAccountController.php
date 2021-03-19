@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Rules\MatchStudentID;
 use Illuminate\Support\Facades\DB;
 
 class ForgotAccountController extends Controller
@@ -17,7 +16,7 @@ class ForgotAccountController extends Controller
     public function getInfo()
     {
         $data = request()->validate([
-            'std_id' => ['required', 'string', 'min:10', 'max:10', new MatchStudentID, 'exists:users'],
+            'std_id' => ['required', 'string', 'min:10', 'max:10', 'exists:users'],
             'realname' => ['required', 'string', 'min:2', 'max:255', 'exists:users'],
             'telephone' => ['required', 'string', 'min:10', 'max:10', 'exists:users']
         ]);
