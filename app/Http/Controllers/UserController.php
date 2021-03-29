@@ -36,11 +36,11 @@ class UserController extends Controller
         return redirect()->back()->with('successMsg', '修改成功');
     }
 
-    public function show(User $user)
+    public function show($STU_ID)
     {
         $participants = DB::table('events')
             ->join('participants', 'events.event_id', '=', 'participants.event_id')
-            ->where('user_id', $user->user_id)->get();
+            ->where('STU_ID', $STU_ID)->get();
 
         foreach ($participants as $participant) {
             $participant->dateStart = $this->dateTimeFormat($participant->dateStart, "Add Week");
@@ -49,7 +49,7 @@ class UserController extends Controller
 
         $collections = DB::table('events')
             ->join('collections', 'events.event_id', '=', 'collections.event_id')
-            ->where('user_id', $user->user_id)->get();
+            ->where('STU_ID', $STU_ID)->get();
 
         foreach ($collections as $collection) {
             $collection->dateStart = $this->dateTimeFormat($collection->dateStart, "Add Week");

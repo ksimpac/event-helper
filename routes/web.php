@@ -20,7 +20,7 @@ Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
 
 Route::middleware(['auth', 'user'])->group(function () {
     Route::name('user.')->group(function () {
-        Route::get('/users/{user}', 'UserController@show')->name('show');
+        Route::get('/users/{STU_ID}', 'UserController@show')->name('show');
         Route::patch('/users/{user}', 'UserController@update')->name('update');
         Route::post('/events/{event}/{user}/signup', 'EventController@signup')->name('signup');
         Route::post('/events/{event}/{user}/favorite', 'EventController@favorite')->name('favorite');
