@@ -39,6 +39,7 @@ class ePortalUserProvider implements UserProvider
         }
 
         $array = $this->getUserData($credentials);
+        $array['type'] = 'user';
 
         if (in_array("User not exist!", $array, true)) {
             return null;
