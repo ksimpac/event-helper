@@ -15,8 +15,8 @@ class CreateCollectionsTable extends Migration
     {
         Schema::create('collections', function (Blueprint $table) {
             $table->unsignedBigInteger('event_id');
-            $table->unsignedBigInteger('STD_ID');
-            $table->primary(['event_id', 'STD_ID']);
+            $table->unsignedBigInteger('STU_ID');
+            $table->primary(['event_id', 'STU_ID']);
             $table->timestamps();
         });
     }
