@@ -54,7 +54,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     });
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'manager'])->group(function () {
     Route::name('auth.')->group(function () {
         Route::get('/changePassword', 'changePasswordController@index')->name('index');
         Route::patch('/changePassword', 'changePasswordController@update')->name('update');
