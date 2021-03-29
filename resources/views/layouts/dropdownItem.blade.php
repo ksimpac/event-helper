@@ -11,7 +11,7 @@
 <a class="dropdown-item" href="{{ route('admin.forgotPassword.index') }}">忘記帳號</a>
 <a class="dropdown-item" href="{{ route('admin.resetPassword.index') }}">重設密碼</a>
 @endif
-{{ Debugbar::info(Auth::user()->STD_ID) }}
+
 @if(Auth::user()->type == "user")
 <a class="dropdown-item" href="{{ route('user.show', ['STU_ID' => Auth::user()->STU_ID]) }}">活動/收藏</a>
 <a class="dropdown-item" href="{{ route('auth.index') }}">更改密碼</a>
