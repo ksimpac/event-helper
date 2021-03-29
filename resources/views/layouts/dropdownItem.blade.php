@@ -13,7 +13,6 @@
 @endif
 
 @if(Auth::user()->type == "user")
-  <a class="dropdown-item" href="{{ route('user.edit', ['user' => Auth::user()->user_id]) }}">個人資料管理</a>
   <a class="dropdown-item" href="{{ route('user.show', ['user' => Auth::user()->user_id]) }}">活動/收藏</a>
   <a class="dropdown-item" href="{{ route('auth.index') }}">更改密碼</a>
   @endif
