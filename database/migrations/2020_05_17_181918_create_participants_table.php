@@ -15,8 +15,8 @@ class CreateParticipantsTable extends Migration
     {
         Schema::create('participants', function (Blueprint $table) {
             $table->unsignedBigInteger('event_id');
-            $table->unsignedBigInteger('user_id');
-            $table->primary(['event_id', 'user_id']);
+            $table->unsignedBigInteger('STD_ID');
+            $table->primary(['event_id', 'STD_ID']);
             $table->timestamps();
         });
     }
