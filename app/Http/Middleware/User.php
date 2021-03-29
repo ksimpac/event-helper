@@ -16,8 +16,7 @@ class User
      */
     public function handle($request, Closure $next)
     {
-        $user = Auth::user();
-        if($user->type != "user" || $user->user_id != $request->user->user_id) return abort(403);
-        return $next($request);
+        $STU_ID = $request->route()->parameter('STU_ID');
+        return Auth::user()->type != 'user' || Auth::user()->STU_ID != $STU_ID ? abort(404) : $next($request);
     }
 }
