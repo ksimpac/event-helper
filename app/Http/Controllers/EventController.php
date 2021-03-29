@@ -236,14 +236,12 @@ class EventController extends Controller
         $img->resize(300, 107)->save(public_path('/storage/image/index/') . $fileName);
     }
 
-    public function signup(Event $event, User $user) //使用者報名
+    public function signup(Event $event, $STU_ID) //使用者報名
     {
         $parts = DB::table('participants')->where('event_id', $event->event_id)->count();
-
-        $user_id = $user->user_id;
         $created_at = now();
         $updated_at = $created_at;
-        $isSignUp = $this->isSignUp($user_id, $event->event_id);
+        $isSignUp = $this->isSignUp($STU_ID, $event->event_id);
 
         if ((now() > date($event->enrollDeadline) || $parts >= $event->maximum && $event->maximum != 0) && !$isSignUp) //如果報名時間已截止或人數已額滿
         {
@@ -261,45 +259,44 @@ class EventController extends Controller
         if (!$isSignUp) {
             DB::table('participants')->insert([
                 'event_id' => $event->event_id,
-                'user_id' => $user_id,
+                'STU_ID' => $STU_ID,
                 'created_at' => $created_at,
                 'updated_at' => $updated_at
             ]);
         } else {
-            DB::table('participants')->where('event_id', $event->event_id)->where('user_id', $user_id)->delete();
+            DB::table('participants')->where('event_id', $event->event_id)->where('STU_ID', $STU_ID)->delete();
         }
 
         return redirect()->back();
     }
 
-    public function favorite(Event $event, User $user) //新增活動至該使用者的收藏
+    public function favorite(Event $event, $STU_ID) //新增活動至該使用者的收藏
     {
-        $user_id = $user->user_id;
         $created_at = now();
         $updated_at = $created_at;
 
-        if (!$this->isAddInFavorite($user_id, $event->event_id)) {
+        if (!$this->isAddInFavorite($STU_ID, $event->event_id)) {
             DB::table('collections')->insert([
                 'event_id' => $event->event_id,
-                'user_id' => $user_id,
+                'STU_ID' => $STU_ID,
                 'created_at' => $created_at,
                 'updated_at' => $updated_at
             ]);
         } else {
-            DB::table('collections')->where('event_id', $event->event_id)->where('user_id', $user_id)->delete();
+            DB::table('collections')->where('event_id', $event->event_id)->where('STU_ID', $STU_ID)->delete();
         }
 
         return redirect()->back();
     }
 
-    private function isSignUp($user_id, $event_id) //檢查使用者是否有報名活動
+    private function isSignUp($STU_ID, $event_id) //檢查使用者是否有報名活動
     {
-        return !DB::table('participants')->where('user_id', $user_id)->where('event_id', $event_id)->get()->isEmpty();
+        return !DB::table('participants')->where('STU_ID', $STU_ID)->where('event_id', $event_id)->get()->isEmpty();
     }
 
-    private function isAddInFavorite($user_id, $event_id) //檢查使用者是否有將活動新增至自己的清單
+    private function isAddInFavorite($STU_ID, $event_id) //檢查使用者是否有將活動新增至自己的清單
     {
-        return !DB::table('collections')->where('user_id', $user_id)->where('event_id', $event_id)->get()->isEmpty();
+        return !DB::table('collections')->where('STU_ID', $STU_ID)->where('event_id', $event_id)->get()->isEmpty();
     }
 
     private function checkTypesPermission() //新增活動權限管理
