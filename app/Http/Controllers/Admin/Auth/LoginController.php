@@ -65,19 +65,6 @@ class LoginController extends Controller
     }
 
     /**
-     * The user has logged out of the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return mixed
-     */
-    protected function loggedOut(Request $request)
-    {
-        return $request->wantsJson()
-            ? new Response('', 204)
-            : redirect('/admin');
-    }
-
-    /**
      * Get the guard to be used during authentication.
      *
      * @return \Illuminate\Contracts\Auth\StatefulGuard
