@@ -29,8 +29,8 @@ Route::group(['prefix' => '/admin', 'namespace' => 'Admin', 'as' => 'admin.'], f
     Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
     Route::middleware(['auth:admin', 'admin'])->group(function () {
         Route::get('/', 'AdminController@index')->name('index');
-        Route::get('/register', 'AdminController@register')->name('register');
-        Route::post('/register', 'AdminController@store')->name('store');
+        Route::get('/register', 'Auth\RegisterController@index')->name('register.index');
+        Route::post('/register', 'Auth\RegisterController@store')->name('register.store');
         Route::get('/resetPassword', 'Auth\ResetPasswordController@index')->name('resetPassword.index');
         Route::patch('/resetPassword', 'Auth\ResetPasswordController@update')->name('resetPassword.update');
     });

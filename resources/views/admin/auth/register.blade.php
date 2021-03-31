@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Register') }}帳號</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('admin.store') }}">
+                    <form method="POST" action="{{ route('admin.register.store') }}">
                         @csrf
 
                         <div class="form-group row">
@@ -16,10 +16,17 @@
 
                             <div class="col-md-6">
 
-                                <select class="form-control" id="type" name="type">
-                                    <option @if(old('type')=="系辦" ) selected @endif>系辦</option>
-                                    <option @if(old('type')=="系會" ) selected @endif>系會</option>
-                                </select>
+                                <div class="custom-control custom-radio custom-control-inline ml-3">
+                                    <input type="radio" id="type1" name="type" class="custom-control-input" value="0"
+                                        {{ old('type') == '0' ? 'checked="checked"': '' }}>
+                                    <label class="custom-control-label" for="type1">系辦</label>
+                                </div>
+
+                                <div class="custom-control custom-radio custom-control-inline ml-3">
+                                    <input type="radio" id="type2" name="type" class="custom-control-input" value="1"
+                                        {{ old('type') == '1' ? 'checked="checked"': '' }}>
+                                    <label class="custom-control-label" for="type2">系會</label>
+                                </div>
 
                                 <label for="type" class="text-danger">※註冊後將無法修改</label>
                             </div>
@@ -32,7 +39,7 @@
                             <div class="col-md-6">
                                 <input id="username" type="text"
                                     class="form-control @error('username') is-invalid @enderror" name="username"
-                                    value="{{ old('username') }}" required autocomplete="off" placeholder="請輸入10~30個字元">
+                                    value="{{ old('username') }}" required autocomplete="off" placeholder="請輸入8~30個字元">
 
                                 @error('username')
                                 <span class="invalid-feedback" role="alert">
@@ -51,7 +58,7 @@
                             <div class="col-md-6">
                                 <input id="password" type="password"
                                     class="form-control @error('password') is-invalid @enderror" name="password"
-                                    required autocomplete="new-password" placeholder="請輸入10~30個字元">
+                                    required autocomplete="new-password" placeholder="請輸入8~30個字元">
 
                                 @error('password')
                                 <span class="invalid-feedback" role="alert">
@@ -88,7 +95,7 @@
                                 <ul class="list-group" id="rule">
                                     <li class="list-group-item border-0">1.必須包含一個大寫字母</li>
                                     <li class="list-group-item border-0">2.必須包含一個小寫字母</li>
-                                    <li class="list-group-item border-0">3.長度為10~30字元</li>
+                                    <li class="list-group-item border-0">3.長度為8~30字元</li>
                                     <li class="list-group-item border-0">4.不可使用空白</li>
                                     <li class="list-group-item border-0">必須符合以上四個條件</li>
                                 </ul>
