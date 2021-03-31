@@ -23,6 +23,9 @@ class RedirectIfAuthenticated
                 case 'admin':
                     return redirect(RouteServiceProvider::ADMIN_HOME);
 
+                case 'manager':
+                    return redirect(RouteServiceProvider::MANAGER_HOME);
+
                 default:
                     return redirect(RouteServiceProvider::HOME);
             }
