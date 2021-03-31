@@ -26,15 +26,15 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="account"
-                                class="col-md-4 col-form-label text-md-right">{{ __('Account') }}</label>
+                            <label for="username"
+                                class="col-md-4 col-form-label text-md-right">{{ __('Username') }}</label>
 
                             <div class="col-md-6">
-                                <input id="account" type="text"
-                                    class="form-control @error('account') is-invalid @enderror" name="account"
-                                    value="{{ old('account') }}" required autocomplete="off" placeholder="請輸入10~30個字元">
+                                <input id="username" type="text"
+                                    class="form-control @error('username') is-invalid @enderror" name="username"
+                                    value="{{ old('username') }}" required autocomplete="off" placeholder="請輸入10~30個字元">
 
-                                @error('account')
+                                @error('username')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
