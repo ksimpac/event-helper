@@ -43,11 +43,19 @@
                 <div class="collapse navbar-collapse right">
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
-
                         <!-- Authentication Links -->
-                        @guest
+                        @if (Auth::guard('admin')->check() == false && Auth::guard('manager')->check() == false &&
+                        Auth::guard()->check() == false)
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            <a class="nav-link text-white" href="{{ route('login') }}">使用者{{ __('Login') }}</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{{ route('admin.login') }}">系辦{{ __('Login') }}</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{{ route('manager.login') }}">系學會{{ __('Login') }}</a>
                         </li>
 
                         @if (Route::has('register'))
@@ -55,40 +63,19 @@
                             <a class="nav-link text-white" href="{{ route('register') }}">{{ __('Register') }}</a>
                         </li>
                         @endif
-                        @else
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                @auth('admin')
-                                系辦
-                                @endauth
+                        @endif
 
-                                @auth('manager')
-                                系學會
-                                @endauth
+                        @auth('web')
+                        @include('users.dropdown')
+                        @endauth
 
-                                @auth('web')
-                                {{ Auth::user()->NAME }}
-                                @endauth
-                                <span class="caret"></span>
-                            </a>
+                        @auth('admin')
+                        @include('admin.dropdown')
+                        @endauth
 
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-
-                                @include('layouts.dropdownItem')
-
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    style="display: none;">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                        @endguest
+                        @auth('manager')
+                        @include('manager.dropdown')
+                        @endauth
                     </ul>
                 </div>
             </div>
