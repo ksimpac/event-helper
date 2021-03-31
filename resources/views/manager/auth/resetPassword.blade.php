@@ -70,7 +70,7 @@
                                 <ul class="list-group" id="rule">
                                     <li class="list-group-item border-0">1.必須包含一個大寫字母</li>
                                     <li class="list-group-item border-0">2.必須包含一個小寫字母</li>
-                                    <li class="list-group-item border-0">3.長度為10~30字元</li>
+                                    <li class="list-group-item border-0">3.長度為8~30字元</li>
                                     <li class="list-group-item border-0">4.不可使用空白</li>
                                     <li class="list-group-item border-0">必須符合以上四個條件</li>
                                 </ul>

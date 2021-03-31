@@ -4,26 +4,28 @@ namespace App\Http\Controllers\Manager\Auth;
 
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
-use App\Admin;
+use Illuminate\Support\Facades\Auth;
+use App\Manager;
+use App\Rules\MatchOldPassword;
 
 class ResetPasswordController extends Controller
 {
     public function index()
     {
-        return view('admin.auth.resetPassword');
+        return view('manager.auth.resetPassword');
     }
 
     public function update()
     {
-        $regex_pattern = 'regex:/^\S*(?=\S{10,30})(?=\S*[a-z])(?=\S*[A-Z])(?![ ])\S*$/';
+        $regex_pattern = 'regex:/^\S*(?=\S{8,30})(?=\S*[a-z])(?=\S*[A-Z])(?![ ])\S*$/';
 
         $data = request()->validate([
-            'username' => ['required', 'string', 'exists:admins'],
-            'new-password' => ['required', 'string', 'min:10', 'max:30', $regex_pattern],
+            'originalPassword' => ['required', new MatchOldPassword],
+            'new-password' => ['required', 'string', 'min:8', 'max:30', $regex_pattern, 'different:originalPassword'],
             'new-password-confirm' => ['same:new-password']
         ]);
 
-        Admin::where('username', $data['username'])->update([
+        Manager::where('username', Auth::user()->username)->update([
             "password" => Hash::make($data['new-password'])
         ]);
 

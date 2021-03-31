@@ -39,7 +39,7 @@ Route::group(['prefix' => '/admin', 'namespace' => 'Admin', 'as' => 'admin.'], f
 Route::group(['prefix' => '/manager', 'namespace' => 'Manager', 'as' => 'manager.'], function () {
     Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
     Route::middleware(['auth:manager', 'manager'])->group(function () {
-        Route::get('/', 'AdminController@index')->name('index');
+        Route::get('/', 'ManagerController@index')->name('index');
         Route::get('/resetPassword', 'Auth\ResetPasswordController@index')->name('resetPassword.index');
         Route::patch('/resetPassword', 'Auth\ResetPasswordController@update')->name('resetPassword.update');
     });
