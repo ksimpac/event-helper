@@ -56,12 +56,15 @@
                         </li>
                         @endif
                         @else
-
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 @auth('admin')
                                 系辦
+                                @endauth
+
+                                @auth('manager')
+                                系學會
                                 @endauth
 
                                 @auth('web')
