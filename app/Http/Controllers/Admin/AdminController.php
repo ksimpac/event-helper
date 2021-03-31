@@ -1,26 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Event;
 use App\Exports\ParticipantExport;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
-//use Barryvdh\Debugbar\Facade as Debugbar;
+use App\Admin;
+use App\Manager;
 
 class AdminController extends Controller
 {
     public function index() //show events
     {
-        $type = Auth::user()->type;
-
-        if ($type == '系會') {
-            $events = DB::table('events')->where('poster', '系會')->orderBy('enrollDeadline', 'desc')->get();
-        } else {
-            $events = DB::table('events')->orderBy('enrollDeadline', 'desc')->get();
-        }
+        $events = DB::table('events')->orderBy('enrollDeadline', 'desc')->get();
 
         foreach ($events as $event) {
 
@@ -39,7 +34,7 @@ class AdminController extends Controller
 
     public function register()
     {
-        return Auth::user()->type == "系辦" ? view('admin.register') : abort(403);
+        return view('admin.auth.register');
     }
 
     public function store() //儲存建立的帳號
@@ -47,22 +42,25 @@ class AdminController extends Controller
         $regex_pattern = 'regex:/^\S*(?=\S{10,30})(?=\S*[a-z])(?=\S*[A-Z])(?![ ])\S*$/';
 
         $data = request()->validate([
-            'account' => ['required', 'string', 'min:10', 'max:30', $regex_pattern, 'unique:users'],
+            'username' => ['required', 'string', 'min:10', 'max:30', $regex_pattern, 'unique:users'],
             'type' => ['required'],
-            'realname' => ['required'],
             'password' => ['required', 'string', 'min:10', 'max:30', $regex_pattern, 'confirmed'],
         ]);
 
-        $data['password'] = Hash::make($data['password']);
-        $data['created_at'] = now();
-        $data['updated_at'] = $data['created_at'];
-
-        if ($data['type'] != "系辦" && $data['type'] != "系會") {
-            $data['identify'] = $data['type'];
-            $data['type'] = 'user';
+        if ($data['type'] == '系辦') {
+            Admin::create([
+                'username' => $data['username'],
+                'password' => Hash::make($data['password']),
+            ]);
         }
 
-        DB::table('users')->insert($data);
+        if ($data['type'] == '系會') {
+            Manager::create([
+                'username' => $data['username'],
+                'password' => Hash::make($data['password']),
+            ]);
+        }
+
         return redirect()->back()->with('successMsg', '帳號建立成功！');
     }
 

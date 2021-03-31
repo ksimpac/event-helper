@@ -16,8 +16,6 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
 
-//Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
-
 Route::middleware(['auth', 'user'])->group(function () {
     Route::name('user.')->group(function () {
         Route::get('/users/{STU_ID}', 'UserController@show')->name('show');
@@ -27,37 +25,34 @@ Route::middleware(['auth', 'user'])->group(function () {
     });
 });
 
-Route::middleware(['auth', 'manager'])->group(function () {
-    Route::name('admin.')->group(function () {
-        Route::get('/admin', 'AdminController@index')->name('index');
-        Route::get('/admin/register', 'AdminController@register')->name('register');
-        Route::post('/admin/register', 'AdminController@store')->name('store');
-        Route::get('/admin/resetPassword', 'changePasswordController@index')->name('resetPassword.index');
-        Route::patch('/admin/resetPassword', 'changePasswordController@update')->name('resetPassword.update');
-
-    });
-
-    Route::name('event.')->group(function () {
-        Route::get('/events/create', 'EventController@create')->name('create');
-        Route::post('/events', 'EventController@store')->name('store');
-        Route::get('/events/{event}/edit', 'EventController@edit')->name('edit');
-        Route::patch('/events/{event}', 'EventController@update')->name('update');
-        Route::delete('/events/{event}', 'EventController@destroy')->name('destroy');
-        Route::get('/events/{event}/export', 'AdminController@export')->name('export');
+Route::group(['prefix' => '/admin', 'namespace' => 'Admin', 'as' => 'admin.'], function () {
+    Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
+    Route::middleware(['auth:admin', 'admin'])->group(function () {
+        Route::get('/', 'AdminController@index')->name('index');
+        Route::get('/register', 'AdminController@register')->name('register');
+        Route::post('/register', 'AdminController@store')->name('store');
+        Route::get('/resetPassword', 'Auth\ResetPasswordController@index')->name('resetPassword.index');
+        Route::patch('/resetPassword', 'Auth\ResetPasswordController@update')->name('resetPassword.update');
     });
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::name('admin.')->group(function () {
-        Route::get('/admin/forgotAccount', 'Auth\ForgotAccountController@index')->name('forgotPassword.index');
-        Route::post('/admin/forgotAccount', 'Auth\ForgotAccountController@getInfo')->name('forgotPassword.getInfo');
+Route::group(['prefix' => '/manager', 'namespace' => 'Manager', 'as' => 'manager.'], function () {
+    Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
+    Route::middleware(['auth:manager', 'manager'])->group(function () {
+        Route::get('/', 'AdminController@index')->name('index');
+        Route::get('/resetPassword', 'Auth\ResetPasswordController@index')->name('resetPassword.index');
+        Route::patch('/resetPassword', 'Auth\ResetPasswordController@update')->name('resetPassword.update');
     });
 });
 
-Route::middleware(['auth', 'manager'])->group(function () {
-    Route::name('auth.')->group(function () {
-        Route::get('/changePassword', 'changePasswordController@index')->name('index');
-        Route::patch('/changePassword', 'changePasswordController@update')->name('update');
+Route::group(['prefix' => '/event', 'as' => 'event.'], function () {
+    Route::middleware('auth:manager,admin')->group(function () {
+        Route::get('/create', 'EventController@create')->name('create');
+        Route::post('/', 'EventController@store')->name('store');
+        Route::get('/{event}/edit', 'EventController@edit')->name('edit');
+        Route::patch('/{event}', 'EventController@update')->name('update');
+        Route::delete('/{event}', 'EventController@destroy')->name('destroy');
+        Route::get('/{event}/export', 'AdminController@export')->name('export');
     });
 });
 

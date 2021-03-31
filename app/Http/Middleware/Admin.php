@@ -16,8 +16,6 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-        $user = Auth::user();
-        if($user->type != "系辦") return abort(403);
-        return $next($request);
+        return Auth::guard('admin')->check() ? $next($request) : abort(404);
     }
 }
