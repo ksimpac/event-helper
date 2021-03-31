@@ -4,15 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Event;
-use App\User;
 use Illuminate\Support\Facades\DB;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Auth;
-use App\Library\AddInfoInEvent;
 use Carbon\Carbon;
-use Barryvdh\Debugbar\Facade as Debugbar;
 
 
 class EventController extends Controller
@@ -25,7 +22,6 @@ class EventController extends Controller
         $this->targets = [
             "流管一1", "流管二1", "流管三1", "流管四1",
             "流管三A", "流管四A", "流管所研一", "流管所研二",
-            "本系老師", "本校老師", "外校老師"
         ];
 
         $this->types = ["系辦", "系會", "校內", "校外"];
@@ -152,24 +148,19 @@ class EventController extends Controller
                 'poster' => $data['poster'],
                 'moreInfo' => $data['moreInfo'],
                 'updated_at' => $data['updated_at']
-        ]);
+            ]);
 
-        if(isset($data['imageName']))
-        {
+        if (isset($data['imageName'])) {
             DB::table('events')
                 ->where('event_id', $event->event_id)
                 ->update(['imageName' => $data['imageName']]);
         }
 
-
-
         $old_targets = DB::table('limits')->where('event_id', $event->event_id)->pluck('identify');
         $lists = $old_targets->diff($data['targets']);
 
-        if($lists != null && $old_targets->count() >= count($data['targets']))
-        {
-            foreach($lists as $list)
-            {
+        if ($lists != null && $old_targets->count() >= count($data['targets'])) {
+            foreach ($lists as $list) {
                 DB::table('participants')
                     ->join('users', 'users.user_id', '=', 'participants.user_id')
                     ->where('users.identify', '=', $list)
@@ -249,7 +240,7 @@ class EventController extends Controller
         }
 
         $isInLimit = DB::table('limits')
-            ->where("identify", "=", $user->identify)
+            ->where("identify", "=", Auth::user()->identify)
             ->where("event_id", "=", $event->event_id)->get()->isEmpty();
 
         if ($isInLimit) {
@@ -338,8 +329,7 @@ class EventController extends Controller
 
         $data['tags'] = explode(" ", $data['tags']);
 
-        if($data['tags'][0] != "")
-        {
+        if ($data['tags'][0] != "") {
             foreach ($data['tags'] as $tag) {
                 DB::table('tags')->insert([
                     'event_id' => $event_id,
