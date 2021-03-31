@@ -6,10 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Event;
 use App\Exports\ParticipantExport;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
-use App\Admin;
-use App\Manager;
 
 class AdminController extends Controller
 {
@@ -30,38 +27,6 @@ class AdminController extends Controller
         }
 
         return view('admin.index', compact('events'));
-    }
-
-    public function register()
-    {
-        return view('admin.auth.register');
-    }
-
-    public function store() //儲存建立的帳號
-    {
-        $regex_pattern = 'regex:/^\S*(?=\S{10,30})(?=\S*[a-z])(?=\S*[A-Z])(?![ ])\S*$/';
-
-        $data = request()->validate([
-            'username' => ['required', 'string', 'min:10', 'max:30', $regex_pattern, 'unique:users'],
-            'type' => ['required'],
-            'password' => ['required', 'string', 'min:10', 'max:30', $regex_pattern, 'confirmed'],
-        ]);
-
-        if ($data['type'] == '系辦') {
-            Admin::create([
-                'username' => $data['username'],
-                'password' => Hash::make($data['password']),
-            ]);
-        }
-
-        if ($data['type'] == '系會') {
-            Manager::create([
-                'username' => $data['username'],
-                'password' => Hash::make($data['password']),
-            ]);
-        }
-
-        return redirect()->back()->with('successMsg', '帳號建立成功！');
     }
 
     public function export(Event $event) //輸出參加名單
