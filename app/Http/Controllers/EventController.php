@@ -197,7 +197,14 @@ class EventController extends Controller
             'type' => ['required'],
         ]);
 
-        $data['poster'] = Auth::user()->type;
+        if (Auth::guard('admin')->check()) {
+            $data['poster'] = '系辦';
+        }
+
+        if (Auth::guard('manager')->check()) {
+            $data['poster'] = '系會';
+        }
+
         $data['created_at'] = now();
         $data['updated_at'] = $data['created_at'];
 
