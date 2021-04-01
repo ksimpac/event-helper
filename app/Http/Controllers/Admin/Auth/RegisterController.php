@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Admin;
 use App\Manager;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
