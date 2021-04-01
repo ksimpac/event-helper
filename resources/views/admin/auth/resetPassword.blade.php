@@ -11,6 +11,26 @@
                     <form method="POST" action="{{ route('admin.resetPassword.update') }}">
                         @csrf
                         @method('PATCH')
+
+                        <div class="form-group row">
+                            <label for="type" class="col-md-4 text-md-right control-label">帳號類型</label>
+
+                            <div class="col-md-6">
+
+                                <div class="custom-control custom-radio custom-control-inline ml-3">
+                                    <input type="radio" id="type1" name="type" class="custom-control-input" value="0"
+                                        {{ old('type') == '0' ? 'checked="checked"': '' }}>
+                                    <label class="custom-control-label" for="type1">系辦</label>
+                                </div>
+
+                                <div class="custom-control custom-radio custom-control-inline ml-3">
+                                    <input type="radio" id="type2" name="type" class="custom-control-input" value="1"
+                                        {{ old('type') == '1' ? 'checked="checked"': '' }}>
+                                    <label class="custom-control-label" for="type2">系會</label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <label for="username"
                                 class="col-md-4 col-form-label text-md-right">{{ __('Username') }}</label>
@@ -71,7 +91,7 @@
                                 <ul class="list-group" id="rule">
                                     <li class="list-group-item border-0">1.必須包含一個大寫字母</li>
                                     <li class="list-group-item border-0">2.必須包含一個小寫字母</li>
-                                    <li class="list-group-item border-0">3.長度為10~30字元</li>
+                                    <li class="list-group-item border-0">3.長度為8~30字元</li>
                                     <li class="list-group-item border-0">4.不可使用空白</li>
                                     <li class="list-group-item border-0">必須符合以上四個條件</li>
                                 </ul>
