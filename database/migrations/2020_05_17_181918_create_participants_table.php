@@ -19,6 +19,7 @@ class CreateParticipantsTable extends Migration
                 ->constrained()->onDelete('cascade');
             $table->string('STU_ID');
             $table->string('identify');
+            $table->string('NAME');
             $table->primary(['event_id', 'STU_ID']);
             $table->timestamps();
         });

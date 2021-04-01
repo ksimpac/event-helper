@@ -258,6 +258,7 @@ class EventController extends Controller
                 'event_id' => $event->event_id,
                 'STU_ID' => $STU_ID,
                 'identify' => Auth::user()->identify,
+                'NAME' => Auth::user()->NAME,
                 'created_at' => $created_at,
                 'updated_at' => $updated_at
             ]);
