@@ -48,11 +48,11 @@ Route::group(['prefix' => '/manager', 'namespace' => 'Manager', 'as' => 'manager
 Route::group(['prefix' => '/event', 'as' => 'event.'], function () {
     Route::middleware('auth:manager,admin')->group(function () {
         Route::get('/create', 'EventController@create')->name('create');
-        Route::post('/', 'EventController@store')->name('store');
-        Route::get('/{event}/edit', 'EventController@edit')->name('edit');
-        Route::patch('/{event}', 'EventController@update')->name('update');
-        Route::delete('/{event}', 'EventController@destroy')->name('destroy');
-        Route::get('/{event}/export', 'EventController@export')->name('export');
+        Route::post('/', 'EventController@store')->name('store')->middleware('event.permission');
+        Route::get('/{event}/edit', 'EventController@edit')->name('edit')->middleware('event.permission');
+        Route::patch('/{event}', 'EventController@update')->name('update')->middleware('event.permission');
+        Route::delete('/{event}', 'EventController@destroy')->name('destroy')->middleware('event.permission');
+        Route::get('/{event}/export', 'EventController@export')->name('export')->middleware('event.permission');
     });
 });
 

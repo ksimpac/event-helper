@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'user' => \App\Http\Middleware\User::class,
         'admin' => \App\Http\Middleware\Admin::class,
         'manager' => \App\Http\Middleware\Manager::class,
+        'event.permission' => \App\Http\Middleware\isHaveEventPermission::class
     ];
 }
