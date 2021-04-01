@@ -162,8 +162,7 @@ class EventController extends Controller
         if ($lists != null && $old_targets->count() >= count($data['targets'])) {
             foreach ($lists as $list) {
                 DB::table('participants')
-                    ->join('users', 'users.user_id', '=', 'participants.user_id')
-                    ->where('users.identify', '=', $list)
+                    ->where('identify', '=', $list)
                     ->delete();
             }
         }
@@ -251,13 +250,14 @@ class EventController extends Controller
             ->where("event_id", "=", $event->event_id)->get()->isEmpty();
 
         if ($isInLimit) {
-            return redirect()->back()->with("errorMsg", "您不符合報名資格，請確認您的身分是否符合活動對象的名單中");
+            return redirect()->back()->with("errorMsg", "您不符合活動對象之內的報名資格");
         }
 
         if (!$isSignUp) {
             DB::table('participants')->insert([
                 'event_id' => $event->event_id,
                 'STU_ID' => $STU_ID,
+                'identify' => Auth::user()->identify,
                 'created_at' => $created_at,
                 'updated_at' => $updated_at
             ]);
