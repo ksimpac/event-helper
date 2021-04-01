@@ -52,7 +52,7 @@ Route::group(['prefix' => '/event', 'as' => 'event.'], function () {
         Route::get('/{event}/edit', 'EventController@edit')->name('edit');
         Route::patch('/{event}', 'EventController@update')->name('update');
         Route::delete('/{event}', 'EventController@destroy')->name('destroy');
-        Route::get('/{event}/export', 'AdminController@export')->name('export');
+        Route::get('/{event}/export', 'EventController@export')->name('export');
     });
 });
 

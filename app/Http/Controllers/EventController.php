@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Exports\ParticipantExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class EventController extends Controller
@@ -286,6 +288,11 @@ class EventController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function export(Event $event) //輸出參加名單
+    {
+        return Excel::download(new ParticipantExport($event->event_id), $event->title . '.xlsx');
     }
 
     private function isSignUp($STU_ID, $event_id) //檢查使用者是否有報名活動

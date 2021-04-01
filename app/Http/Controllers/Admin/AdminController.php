@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Event;
-use App\Exports\ParticipantExport;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -27,13 +25,6 @@ class AdminController extends Controller
         }
 
         return view('admin.index', compact('events'));
-    }
-
-    public function export(Event $event) //輸出參加名單
-    {
-        return (new ParticipantExport)
-            ->forEventId($event->event_id)
-            ->download($event->title . '.xlsx');
     }
 
     private function dateTimeFormat($dateString, $option)
