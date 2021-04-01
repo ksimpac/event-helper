@@ -2,40 +2,30 @@
 
 namespace App\Exports;
 
-use App\Event;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\Exportable;
+use App\Participant;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ParticipantExport implements FromQuery, WithHeadings
+class ParticipantExport implements FromCollection, WithHeadings
 {
-    
-    use Exportable;
 
-    /**
-    * @return \Illuminate\Database\Query\Builder
-    */
-    
-    public function forEventId(int $event_id)
+    public function __construct(int $event_id)
     {
         $this->event_id = $event_id;
-        return $this;
     }
-    
-    public function query()
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function collection()
     {
-        return DB::table('participants')
-                ->join('users', 'users.user_id' , '=' ,'participants.user_id')
-                ->where('participants.event_id', '=', $this->event_id)
-                ->select('users.std_id', 'users.identify','users.realname', 'users.telephone')
-                ->orderBy('users.user_id');
+        return Participant::where('event_id', $this->event_id)
+            ->get(['STU_ID', 'identify', 'NAME']);
     }
 
     public function headings(): array
     {
         return [
-            '學號', '班級', '姓名', '手機號碼'
+            '學號', '班級', '姓名',
         ];
     }
 }
