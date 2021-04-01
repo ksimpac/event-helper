@@ -15,6 +15,8 @@ class CreateTagsTable extends Migration
     {
         Schema::create('tags', function (Blueprint $table) {
             $table->unsignedBigInteger('event_id');
+            $table->foreign('event_id')->references('event_id')->on('events')
+                ->constrained()->onDelete('cascade');
             $table->string('name');
             $table->primary(['event_id', 'name']);
             $table->timestamps();

@@ -15,6 +15,8 @@ class CreateCollectionsTable extends Migration
     {
         Schema::create('collections', function (Blueprint $table) {
             $table->unsignedBigInteger('event_id');
+            $table->foreign('event_id')->references('event_id')->on('events')
+                ->constrained()->onDelete('cascade');
             $table->string('STU_ID');
             $table->primary(['event_id', 'STU_ID']);
             $table->timestamps();

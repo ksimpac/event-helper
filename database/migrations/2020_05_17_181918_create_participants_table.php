@@ -15,6 +15,8 @@ class CreateParticipantsTable extends Migration
     {
         Schema::create('participants', function (Blueprint $table) {
             $table->unsignedBigInteger('event_id');
+            $table->foreign('event_id')->references('event_id')->on('events')
+                ->constrained()->onDelete('cascade');
             $table->string('STU_ID');
             $table->string('identify');
             $table->primary(['event_id', 'STU_ID']);

@@ -15,6 +15,8 @@ class CreateLimitsTable extends Migration
     {
         Schema::create('limits', function (Blueprint $table) {
             $table->unsignedBigInteger('event_id');
+            $table->foreign('event_id')->references('event_id')->on('events')
+                ->constrained()->onDelete('cascade');
             $table->string('identify');
             $table->primary(['event_id', 'identify']);
             $table->timestamps();
