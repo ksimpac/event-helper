@@ -16,7 +16,6 @@ class Manager
      */
     public function handle($request, Closure $next)
     {
-        $isManager = Auth::guard('admin')->check() || Auth::guard('manager')->check();
-        return $isManager ? $next($request) : abort(404);
+        return Auth::guard('manager')->check() ? $next($request) : abort(404);
     }
 }
