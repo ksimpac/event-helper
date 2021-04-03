@@ -93,9 +93,9 @@ class EventController extends Controller
         return view('events.show', compact('parts', 'event', 'tags', 'limits', 'isSignUp', 'isAddInFavorite'));
     }
 
-    public function store() //儲存活動
+    public function store(Request $request) //儲存活動
     {
-        $data = $this->process(request());
+        $data = $this->process($request);
 
         $event_id = DB::table('events')->insertGetId([
             'title' => $data['title'],
@@ -132,9 +132,9 @@ class EventController extends Controller
         ]);
     }
 
-    public function update(Event $event) //更新活動
+    public function update(Event $event, Request $request) //更新活動
     {
-        $data = $this->process(request(), $event);
+        $data = $this->process($request, $event);
 
         Storage::delete($event->imageName);
 
