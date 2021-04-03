@@ -12,18 +12,18 @@
 
         <div class="col-sm-4">
           <div class="card">
-            <img class="card-img-top" src="{{ asset('/storage/image/index').'/'.$participant->imageName }}" alt="Card image cap">
+            <img class="card-img-top" src="{{ asset('/storage/image/index').'/'.$participant->event->imageName }}" alt="Card image cap">
             <div class="card-body text-center">
-              <h5 class="card-title">{{ $participant->title }}</h5>
-              <p class="card-text">{{ $participant->title }}</p>
+              <h5 class="card-title">{{ $participant->event->title }}</h5>
+              <p class="card-text">{{ $participant->event->title }}</p>
               <p class="card-text">
-                <i class="far fa-clock fa-1x"></i>{{ $participant->dateStart }}<br />
+                <i class="far fa-clock fa-1x"></i>{{ $participant->event->dateStart }}<br />
                 至<br />
-                <i class="far fa-clock fa-1x"></i>{{ $participant->dateEnd }}<br />
+                <i class="far fa-clock fa-1x"></i>{{ $participant->event->dateEnd }}<br />
               </p>
             </div>
             <div class="card-footer d-flex">
-              <a href="{{ route('event.show', ['event' => $participant->event_id]) }}" class="btn btn-primary mr-auto p-2">查看詳情</a>
+              <a href="{{ route('event.show', ['event' => $participant->event->event_id]) }}" class="btn btn-primary mr-auto p-2">查看詳情</a>
             </div>
           </div>
         </div>
@@ -47,18 +47,18 @@
 
         <div class="col-sm-4">
           <div class="card">
-            <img class="card-img-top" src="{{ asset('/storage/image/index').'/'.$collection->imageName }}" alt="Card image cap">
+            <img class="card-img-top" src="{{ asset('/storage/image/index').'/'.$collection->event->imageName }}" alt="Card image cap">
             <div class="card-body text-center">
-              <h5 class="card-title">{{ $collection->title }}</h5>
-              <p class="card-text">{{ $collection->title }}</p>
+              <h5 class="card-title">{{ $collection->event->title }}</h5>
+              <p class="card-text">{{ $collection->event->title }}</p>
               <p class="card-text">
-                <i class="far fa-clock fa-1x"></i>{{ $collection->dateStart }}<br />
+                <i class="far fa-clock fa-1x"></i>{{ $collection->event->dateStart }}<br />
                 至<br />
-                <i class="far fa-clock fa-1x"></i>{{ $collection->dateEnd }}<br />
+                <i class="far fa-clock fa-1x"></i>{{ $collection->event->dateEnd }}<br />
               </p>
             </div>
             <div class="card-footer d-flex">
-              <a href="{{ route('event.show', ['event' => $collection->event_id]) }}" class="btn btn-primary mr-auto p-2">查看詳情</a>
+              <a href="{{ route('event.show', ['event' => $collection->event->event_id]) }}" class="btn btn-primary mr-auto p-2">查看詳情</a>
             </div>
           </div>
         </div>

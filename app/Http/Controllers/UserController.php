@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Support\Facades\DB;
-//use Barryvdh\Debugbar\Facade as Debugbar;
 use Carbon\Carbon;
+use App\Participant;
+use App\Collection;
 
 class UserController extends Controller
 {
@@ -14,46 +15,20 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function update(User $user)
-    {
-
-        if (request()->input('telephone') !== $user->telephone) {
-            $data = request()->validate([
-                'telephone' => ['required', 'size:10', 'unique:users']
-            ]);
-            $user->update($data);
-        }
-
-        if (request()->input('email') !== $user->email) {
-            $data = request()->validate([
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users']
-            ]);
-            $user->update($data);
-            //$user->sendEmailVerificationNotification(); //重送驗證信件
-        }
-
-
-        return redirect()->back()->with('successMsg', '修改成功');
-    }
-
     public function show($STU_ID)
     {
-        $participants = DB::table('events')
-            ->join('participants', 'events.event_id', '=', 'participants.event_id')
-            ->where('STU_ID', $STU_ID)->get();
+        $participants = Participant::with('event')->where('STU_ID', $STU_ID)->get();
 
         foreach ($participants as $participant) {
-            $participant->dateStart = $this->dateTimeFormat($participant->dateStart, "Add Week");
-            $participant->dateEnd = $this->dateTimeFormat($participant->dateEnd, "Add Week");
+            $participant->event->dateStart = $this->dateTimeFormat($participant->event->dateStart, "Add Week");
+            $participant->event->dateEnd = $this->dateTimeFormat($participant->event->dateEnd, "Add Week");
         }
 
-        $collections = DB::table('events')
-            ->join('collections', 'events.event_id', '=', 'collections.event_id')
-            ->where('STU_ID', $STU_ID)->get();
+        $collections = Collection::with('event')->where('STU_ID', $STU_ID)->get();
 
         foreach ($collections as $collection) {
-            $collection->dateStart = $this->dateTimeFormat($collection->dateStart, "Add Week");
-            $collection->dateEnd = $this->dateTimeFormat($collection->dateEnd, "Add Week");
+            $collection->event->dateStart = $this->dateTimeFormat($collection->event->dateStart, "Add Week");
+            $collection->event->dateEnd = $this->dateTimeFormat($collection->event->dateEnd, "Add Week");
         }
 
         return view('users.show', compact('participants', 'collections'));
