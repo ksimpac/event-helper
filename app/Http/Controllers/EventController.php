@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Event;
+use App\Participant;
+use App\Tag;
+use App\Limit;
 use Illuminate\Support\Facades\DB;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Facades\Storage;
@@ -76,9 +79,9 @@ class EventController extends Controller
 
     public function show(Event $event) //顯示活動資訊
     {
-        $parts = DB::table('participants')->where('event_id', $event->event_id)->count();
-        $tags = DB::table('tags')->where('event_id', $event->event_id)->get('name');
-        $limits = DB::table('limits')->where('event_id', $event->event_id)->get('identify');
+        $parts = Participant::where('event_id', $event->event_id)->count();
+        $tags = Tag::where('event_id', $event->event_id)->get('name');
+        $limits = Limit::where('event_id', $event->event_id)->get('identify');
         $isSignUp = $this->isSignUp(Auth::id(), $event->event_id);
         $isAddInFavorite = $this->isAddInFavorite(Auth::id(), $event->event_id);
         $event->dateStartStr = $this->dateTimeFormat($event->dateStart, "Google Calendar");
