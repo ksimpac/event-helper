@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use App\Exports\ParticipantExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-
 class EventController extends Controller
 {
     private $targets;
@@ -31,22 +30,21 @@ class EventController extends Controller
 
     public function index($param = null)
     {
-
         $type = array("系辦", "系會", "校內", "校外");
 
         if (in_array($param, $type) == false && $param != null) abort(404);
 
         if ($param == null) {
-            $events = DB::table('events')->orderBy('dateEnd', 'desc')->get();
+            $events = Event::with('participants')->orderBy('dateEnd', 'desc')->get();
         } else {
-            $events = DB::table('events')->where('type', '=', $param)->orderBy('dateEnd', 'desc')->get();
+            $events = Event::with('participants')->where('type', '=', $param)
+                ->orderBy('dateEnd', 'desc')->get();
         }
 
         foreach ($events as $event) {
             $event->dateStart = $this->dateTimeFormat($event->dateStart, "Add Week");
             $event->dateEnd = $this->dateTimeFormat($event->dateEnd, "Add Week");
-
-            $count = DB::table('participants')->where('event_id', $event->event_id)->count(); //計算該活動有多少人報名
+            $count = $event->participants->count(); //計算該活動有多少人報名
 
             if (date('Y-m-d H:i:s', strtotime($event->enrollDeadline)) <= date('Y-m-d H:i:s')) {
                 $event->status = "已截止";
