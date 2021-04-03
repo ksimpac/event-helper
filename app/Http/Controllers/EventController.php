@@ -96,25 +96,9 @@ class EventController extends Controller
     public function store(Request $request) //儲存活動
     {
         $data = $this->process($request);
-
-        $event_id = DB::table('events')->insertGetId([
-            'title' => $data['title'],
-            'slogan' => $data['slogan'],
-            'location' => $data['location'],
-            'dateStart' => $data['dateStart'],
-            'dateEnd' => $data['dateEnd'],
-            'enrollDeadline' => $data['enrollDeadline'],
-            'maximum' => $data['maximum'],
-            'imageName' => $data['imageName'],
-            'type' => $data['type'],
-            'poster' => $data['poster'],
-            'moreInfo' => $data['moreInfo'],
-            'created_at' => $data['created_at'],
-            'updated_at' => $data['updated_at'],
-        ]);
-
-        $this->tags_n_limit($data, $event_id);
-
+        $event_id = Event::create($data)->event_id;
+        $this->tags($data, $event_id);
+        $this->limits($data, $event_id);
         return redirect('/');
     }
 
@@ -135,44 +119,26 @@ class EventController extends Controller
     public function update(Event $event, Request $request) //更新活動
     {
         $data = $this->process($request, $event);
+        $tags = $data['tags'];
+        $targets = $data['targets'];
+        unset($data['tags'], $data['targets']);
 
-        Storage::delete($event->imageName);
+        if (isset($data['indexImage'])) Storage::delete($event->imageName);
+        Event::where('event_id', $event->event_id)->update($data);
 
-        DB::table('events')->where('event_id', $event->event_id)
-            ->update([
-                'title' => $data['title'],
-                'slogan' => $data['slogan'],
-                'location' => $data['location'],
-                'dateStart' => $data['dateStart'],
-                'dateEnd' => $data['dateEnd'],
-                'enrollDeadline' => $data['enrollDeadline'],
-                'maximum' => $data['maximum'],
-                'type' => $data['type'],
-                'poster' => $data['poster'],
-                'moreInfo' => $data['moreInfo'],
-                'updated_at' => $data['updated_at']
-            ]);
+        $old_targets = Limit::where('event_id', $event->event_id)->pluck('identify');
+        $lists = $old_targets->diff($targets);
 
-        if (isset($data['imageName'])) {
-            DB::table('events')
+        if ($lists != null && $old_targets->count() >= count($targets)) {
+            Participant::with('event')
                 ->where('event_id', $event->event_id)
-                ->update(['imageName' => $data['imageName']]);
+                ->whereIn('identify', $lists)->delete();
         }
 
-        $old_targets = DB::table('limits')->where('event_id', $event->event_id)->pluck('identify');
-        $lists = $old_targets->diff($data['targets']);
-
-        if ($lists != null && $old_targets->count() >= count($data['targets'])) {
-            foreach ($lists as $list) {
-                DB::table('participants')
-                    ->where('identify', '=', $list)
-                    ->delete();
-            }
-        }
-
-        DB::table('tags')->where('event_id', $event->event_id)->delete();
-        DB::table('limits')->where('event_id', $event->event_id)->delete();
-        $this->tags_n_limit($data, $event->event_id);
+        Tag::where('event_id', $event->event_id)->delete();
+        Limit::where('event_id', $event->event_id)->delete();
+        $this->tags($tags, $event->event_id);
+        $this->limits($targets, $event->event_id);
 
         return redirect('/');
     }
@@ -206,9 +172,6 @@ class EventController extends Controller
         if (Auth::guard('manager')->check()) {
             $data['poster'] = '系會';
         }
-
-        $data['created_at'] = now();
-        $data['updated_at'] = $data['created_at'];
 
         /**
          * Purifier is a anti XSS attack tool
@@ -340,28 +303,25 @@ class EventController extends Controller
         }
     }
 
-    private function tags_n_limit($data, $event_id)
+    private function tags($data, $event_id)
     {
+        if ($data == "") return;
+        $tags = explode(" ", $data);
 
-        $data['tags'] = explode(" ", $data['tags']);
-
-        if ($data['tags'][0] != "") {
-            foreach ($data['tags'] as $tag) {
-                DB::table('tags')->insert([
-                    'event_id' => $event_id,
-                    'name' => $tag,
-                    'created_at' => $data['created_at'],
-                    'updated_at' => $data['updated_at']
-                ]);
-            }
+        foreach ($tags as $tag) {
+            Tag::create([
+                'event_id' => $event_id,
+                'name' => $tag,
+            ]);
         }
+    }
 
-        foreach ($data['targets'] as $target) {
-            DB::table('limits')->insert([
+    private function limits($data, $event_id)
+    {
+        foreach ($data as $target) {
+            Limit::create([
                 'event_id' => $event_id,
                 'identify' => $target,
-                'created_at' => $data['created_at'],
-                'updated_at' => $data['updated_at']
             ]);
         }
     }
