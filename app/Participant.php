@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Participant extends Model
 {
-    protected $fillable = ['event_id', 'identify', 'name', 'STU_ID'];
+    protected $fillable = ['event_id', 'identify', 'NAME', 'STU_ID'];
     protected $primaryKey = ['event_id', 'STU_ID'];
     public $incrementing = false;
 
