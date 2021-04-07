@@ -6,7 +6,7 @@
       @endif
 
       <div class="col-sm-4">
-        <div class="card">
+        <div class="card @if (Auth::guard('admin')->check() && $event->poster == '系會' && Request::route()->getName() != 'event.index') border-danger @endif">
           <img class="card-img-top" src="{{ asset('/storage/image/index').'/'.$event->imageName }}" alt="Card image cap">
           <div class="card-body text-center">
             <h5 class="card-title font-weight-bold">{{ $event->title }}</h5>
