@@ -33,8 +33,6 @@ class EventController extends Controller
 
     public function index($param = null)
     {
-        //$type = array("系辦", "系會", "校內", "校外");
-
         if (in_array($param, $this->types) == false && $param != null) abort(404);
 
         if ($param == null) {
