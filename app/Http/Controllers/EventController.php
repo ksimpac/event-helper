@@ -34,9 +34,9 @@ class EventController extends Controller
 
     public function index($param = null)
     {
-        $type = array("系辦", "系會", "校內", "校外");
+        //$type = array("系辦", "系會", "校內", "校外");
 
-        if (in_array($param, $type) == false && $param != null) abort(404);
+        if (in_array($param, $this->types) == false && $param != null) abort(404);
 
         if ($param == null) {
             $events = Event::with('participants')->orderBy('dateEnd', 'desc')->get();
@@ -108,7 +108,6 @@ class EventController extends Controller
         $this->checkTypesPermission();
         $tags = Tag::where('event_id', $event->event_id)->pluck('name')->toArray();
         $limits = Limit::where('event_id', $event->event_id)->pluck('identify')->toArray();
-        $this->checkTypesPermission();
         return view('events.edit', [
             'targets' => $this->targets,
             'types' => $this->types,
@@ -263,7 +262,7 @@ class EventController extends Controller
 
     private function checkTypesPermission() //新增活動權限管理
     {
-        if (Auth::user()->type == "系會") {
+        if (Auth::guard('manager')->check()) {
             $key = array_search("系辦", $this->types);
             unset($this->types[$key]);
         }
