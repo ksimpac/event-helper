@@ -7,6 +7,7 @@ use App\Event;
 use App\Participant;
 use App\Tag;
 use App\Limit;
+use App\Collection;
 use Illuminate\Support\Facades\DB;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Facades\Storage;
@@ -105,8 +106,9 @@ class EventController extends Controller
     public function edit(Event $event) //編輯活動
     {
         $this->checkTypesPermission();
-        $tags = DB::table('tags')->where('event_id', $event->event_id)->pluck('name')->toArray();
-        $limits = DB::table('limits')->where('event_id', $event->event_id)->pluck('identify')->toArray();
+        $tags = Tag::where('event_id', $event->event_id)->pluck('name')->toArray();
+        $limits = Limit::where('event_id', $event->event_id)->pluck('identify')->toArray();
+        $this->checkTypesPermission();
         return view('events.edit', [
             'targets' => $this->targets,
             'types' => $this->types,
@@ -146,7 +148,7 @@ class EventController extends Controller
     public function destroy(Event $event) //刪除活動
     {
         Storage::delete($event->imageName);
-        DB::table('events')->where('event_id', $event->event_id)->delete();
+        Event::where('event_id', $event->event_id)->delete();
         return redirect()->back();
     }
 
@@ -201,9 +203,7 @@ class EventController extends Controller
 
     public function signup(Event $event, $STU_ID) //使用者報名
     {
-        $parts = DB::table('participants')->where('event_id', $event->event_id)->count();
-        $created_at = now();
-        $updated_at = $created_at;
+        $parts = Participant::where('event_id', $event->event_id)->count();
         $isSignUp = $this->isSignUp($STU_ID, $event->event_id);
 
         if ((now() > date($event->enrollDeadline) || $parts >= $event->maximum && $event->maximum != 0) && !$isSignUp) //如果報名時間已截止或人數已額滿
@@ -211,8 +211,7 @@ class EventController extends Controller
             return redirect()->back()->with("errorMsg", "報名時間已過或人數已額滿");
         }
 
-        $isInLimit = DB::table('limits')
-            ->where("identify", "=", Auth::user()->identify)
+        $isInLimit = Limit::where("identify", "=", Auth::user()->identify)
             ->where("event_id", "=", $event->event_id)->get()->isEmpty();
 
         if ($isInLimit) {
@@ -220,16 +219,14 @@ class EventController extends Controller
         }
 
         if (!$isSignUp) {
-            DB::table('participants')->insert([
+            Participant::create([
                 'event_id' => $event->event_id,
                 'STU_ID' => $STU_ID,
                 'identify' => Auth::user()->identify,
                 'NAME' => Auth::user()->NAME,
-                'created_at' => $created_at,
-                'updated_at' => $updated_at
             ]);
         } else {
-            DB::table('participants')->where('event_id', $event->event_id)->where('STU_ID', $STU_ID)->delete();
+            Participant::where('event_id', $event->event_id)->where('STU_ID', $STU_ID)->delete();
         }
 
         return redirect()->back();
@@ -237,18 +234,13 @@ class EventController extends Controller
 
     public function favorite(Event $event, $STU_ID) //新增活動至該使用者的收藏
     {
-        $created_at = now();
-        $updated_at = $created_at;
-
         if (!$this->isAddInFavorite($STU_ID, $event->event_id)) {
-            DB::table('collections')->insert([
+            Collection::create([
                 'event_id' => $event->event_id,
                 'STU_ID' => $STU_ID,
-                'created_at' => $created_at,
-                'updated_at' => $updated_at
             ]);
         } else {
-            DB::table('collections')->where('event_id', $event->event_id)->where('STU_ID', $STU_ID)->delete();
+            Collection::where('event_id', $event->event_id)->where('STU_ID', $STU_ID)->delete();
         }
 
         return redirect()->back();
@@ -261,12 +253,12 @@ class EventController extends Controller
 
     private function isSignUp($STU_ID, $event_id) //檢查使用者是否有報名活動
     {
-        return !DB::table('participants')->where('STU_ID', $STU_ID)->where('event_id', $event_id)->get()->isEmpty();
+        return !Participant::where('STU_ID', $STU_ID)->where('event_id', $event_id)->get()->isEmpty();
     }
 
     private function isAddInFavorite($STU_ID, $event_id) //檢查使用者是否有將活動新增至自己的清單
     {
-        return !DB::table('collections')->where('STU_ID', $STU_ID)->where('event_id', $event_id)->get()->isEmpty();
+        return !Collection::where('STU_ID', $STU_ID)->where('event_id', $event_id)->get()->isEmpty();
     }
 
     private function checkTypesPermission() //新增活動權限管理
