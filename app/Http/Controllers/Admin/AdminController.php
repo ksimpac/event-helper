@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Event;
 use App\Classes\DateTimeFormat;
+use App\Classes\Card;
 
 class AdminController extends Controller
 {
     public function index() //show events
     {
-        $events = Event::with('participants')->orderBy('enrollDeadline', 'desc')->get();
+        $events = Card::sort(Event::with('participants')->orderBy('enrollDeadline', 'desc')->get());
 
         foreach ($events as $event) {
             $event->dateStart = DateTimeFormat::parse($event->dateStart, "Add Week");

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\ParticipantExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Classes\DateTimeFormat;
+use App\Classes\Card;
 
 class EventController extends Controller
 {
@@ -36,10 +37,10 @@ class EventController extends Controller
         if (in_array($param, $this->types) == false && $param != null) abort(404);
 
         if ($param == null) {
-            $events = Event::with('participants')->orderBy('dateEnd', 'desc')->get();
+            $events = Card::sort(Event::with('participants')->orderBy('dateEnd', 'desc')->get());
         } else {
-            $events = Event::with('participants')->where('type', '=', $param)
-                ->orderBy('dateEnd', 'desc')->get();
+            $events = Card::sort(Event::with('participants')->where('type', '=', $param)
+                ->orderBy('dateEnd', 'desc')->get());
         }
 
         foreach ($events as $event) {
