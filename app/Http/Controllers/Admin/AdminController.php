@@ -15,6 +15,7 @@ class AdminController extends Controller
         foreach ($events as $event) {
             $event->dateStart = $this->dateTimeFormat($event->dateStart, "Add Week");
             $event->dateEnd = $this->dateTimeFormat($event->dateEnd, "Add Week");
+            $event->enrollDeadline = $this->dateTimeFormat($event->enrollDeadline, "Add Week");
             $count = $event->participants->count(); //計算該活動有多少人報名
 
             if ($event->maximum != 0) {

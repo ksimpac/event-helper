@@ -65,6 +65,7 @@ class EventController extends Controller
             }
 
             $event->status = "開放報名中";
+            $event->enrollDeadline = $this->dateTimeFormat($event->enrollDeadline, "Add Week");
         }
 
         $param = $param ?? "最新";

@@ -16,10 +16,13 @@
               至<br />
               <i class="far fa-clock fa-1x"></i>{{ $event->dateEnd }}<br />
             </p>
+            <p class="card-text">
+                <i class="far fa-calendar-times fa-2x"></i>{{ $event->enrollDeadline }}
+            </p>
           </div>
 
           <div class="card-footer d-flex">
-            @if(Auth::guard('admin')->check() || Auth::guard('manager')->check() && Request::route()->getName() != 'event.index')
+            @if((Auth::guard('admin')->check() || Auth::guard('manager')->check()) && Request::route()->getName() != 'event.index')
                 <a href="{{ route('event.show', ['event' => $event->event_id]) }}" class="btn btn-primary mr-auto p-2">查看</a>
                 <a href="{{ route('event.edit', ['event' => $event->event_id]) }}" class="btn btn-warning mr-auto p-2">修改</a>
                 <a href="{{ route('event.export', ['event' => $event->event_id]) }}" class="btn btn-info mr-auto p-2">名單</a>
