@@ -82,8 +82,8 @@ class EventController extends Controller
         $parts = Participant::where('event_id', $event->event_id)->count();
         $tags = Tag::where('event_id', $event->event_id)->get('name');
         $limits = Limit::where('event_id', $event->event_id)->get('identify');
-        $isSignUp = $this->isSignUp(Auth::id(), $event->event_id);
-        $isAddInFavorite = $this->isAddInFavorite(Auth::id(), $event->event_id);
+        $isSignUp = $this->isSignUp(Auth::user()->STU_ID, $event->event_id);
+        $isAddInFavorite = $this->isAddInFavorite(Auth::user()->STU_ID, $event->event_id);
         $event->dateStartStr = DateTimeFormat::convertToGoogleCalendarFormat(DateTimeFormat::getUTCDateTime($event->dateStart)); //due to google calendar will automatically add timezone
         $event->dateEndStr = DateTimeFormat::convertToGoogleCalendarFormat(DateTimeFormat::getUTCDateTime($event->dateEnd)); //due to google calendar will automatically add timezone
         $event->dateStart = DateTimeFormat::addWeekday(DateTimeFormat::removeSeconds($event->dateStart));
