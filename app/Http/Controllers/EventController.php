@@ -44,8 +44,8 @@ class EventController extends Controller
         }
 
         foreach ($events as $event) {
-            $event->dateStart = DateTimeFormat::parse($event->dateStart, "Add Week");
-            $event->dateEnd = DateTimeFormat::parse($event->dateEnd, "Add Week");
+            $event->dateStart = DateTimeFormat::addWeekday(DateTimeFormat::removeSeconds($event->dateStart));
+            $event->dateEnd = DateTimeFormat::addWeekday(DateTimeFormat::removeSeconds($event->dateEnd));
             $count = $event->participants->count(); //計算該活動有多少人報名
 
             if (date('Y-m-d H:i:s', strtotime($event->enrollDeadline)) <= date('Y-m-d H:i:s')) {
@@ -63,7 +63,7 @@ class EventController extends Controller
             }
 
             $event->status = "開放報名中";
-            $event->enrollDeadline = DateTimeFormat::parse($event->enrollDeadline, "Add Week");
+            $event->enrollDeadline = DateTimeFormat::addWeekday(DateTimeFormat::removeSeconds($event->enrollDeadline));
         }
 
         $param = $param ?? "最新";
@@ -84,11 +84,11 @@ class EventController extends Controller
         $limits = Limit::where('event_id', $event->event_id)->get('identify');
         $isSignUp = $this->isSignUp(Auth::id(), $event->event_id);
         $isAddInFavorite = $this->isAddInFavorite(Auth::id(), $event->event_id);
-        $event->dateStartStr = DateTimeFormat::parse($event->dateStart, "Google Calendar");
-        $event->dateEndStr = DateTimeFormat::parse($event->dateEnd, "Google Calendar");
-        $event->dateStart = DateTimeFormat::parse($event->dateStart, "Add Week");
-        $event->dateEnd = DateTimeFormat::parse($event->dateEnd, "Add Week");
-        $event->enrollDeadline = DateTimeFormat::parse($event->enrollDeadline, "Add Week");
+        $event->dateStartStr = DateTimeFormat::convertToGoogleCalendarFormat(DateTimeFormat::getUTCDateTime($event->dateStart)); //due to google calendar will automatically add timezone
+        $event->dateEndStr = DateTimeFormat::convertToGoogleCalendarFormat(DateTimeFormat::getUTCDateTime($event->dateEnd)); //due to google calendar will automatically add timezone
+        $event->dateStart = DateTimeFormat::addWeekday(DateTimeFormat::removeSeconds($event->dateStart));
+        $event->dateEnd = DateTimeFormat::addWeekday(DateTimeFormat::removeSeconds($event->dateEnd));
+        $event->enrollDeadline = DateTimeFormat::addWeekday(DateTimeFormat::removeSeconds($event->enrollDeadline));
 
         return view('events.show', compact('parts', 'event', 'tags', 'limits', 'isSignUp', 'isAddInFavorite'));
     }

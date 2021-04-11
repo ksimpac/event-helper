@@ -15,9 +15,9 @@ class ManagerController extends Controller
             ->orderBy('enrollDeadline', 'desc')->get());
 
         foreach ($events as $event) {
-            $event->dateStart = DateTimeFormat::parse($event->dateStart, "Add Week");
-            $event->dateEnd = DateTimeFormat::parse($event->dateEnd, "Add Week");
-            $event->enrollDeadline = DateTimeFormat::parse($event->enrollDeadline, "Add Week");
+            $event->dateStart = DateTimeFormat::addWeekday(DateTimeFormat::removeSeconds($event->dateStart));
+            $event->dateEnd = DateTimeFormat::addWeekday(DateTimeFormat::removeSeconds($event->dateEnd));
+            $event->enrollDeadline = DateTimeFormat::addWeekday(DateTimeFormat::removeSeconds($event->enrollDeadline));
             $count = $event->participants->count(); //計算該活動有多少人報名
 
             if ($event->maximum != 0) {
