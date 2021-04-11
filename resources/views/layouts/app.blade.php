@@ -47,7 +47,7 @@
                         @if (Auth::guard('admin')->check() == false && Auth::guard('manager')->check() == false &&
                         Auth::guard()->check() == false)
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('login') }}">使用者{{ __('Login') }}</a>
+                            <a class="nav-link text-white" href="{{ route('login') }}">學生{{ __('Login') }}</a>
                         </li>
 
                         <li class="nav-item">
