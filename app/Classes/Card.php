@@ -8,24 +8,24 @@ class Card
 {
     public static function sort($object)
     {
-        $deadlineBeforeNowEvent = $object->filter(function ($value, $key) {
-            $now = Carbon::now();
+        $now = Carbon::now();
+
+        $deadlineHasExpiredEvent = $object->filter(function ($value) use ($now) {
             return $value->enrollDeadline <= $now;
         });
 
-        $deadlineAfterNowEvent = $object->filter(function ($value, $key) {
-            $now = Carbon::now();
+        $deadlineHasNotExpiredEvent = $object->filter(function ($value) use ($now) {
             return $value->enrollDeadline > $now;
         });
 
-        $deadlineBeforeNowEvent = $deadlineBeforeNowEvent->sortByDesc(function ($value, $key) {
+        $deadlineHasExpiredEvent = $deadlineHasExpiredEvent->sortByDesc(function ($value) {
             return $value->enrollDeadline;
         });
 
-        $deadlineAfterNowEvent = $deadlineAfterNowEvent->sortBy(function ($value, $key) {
+        $deadlineHasNotExpiredEvent = $deadlineHasNotExpiredEvent->sortBy(function ($value) {
             return $value->enrollDeadline;
-        });
+        }); //Sorting event depanding on which enrollDeadline close to now
 
-        return $deadlineAfterNowEvent->merge($deadlineBeforeNowEvent);
+        return $deadlineHasNotExpiredEvent->merge($deadlineHasExpiredEvent);
     }
 }
