@@ -33,6 +33,12 @@ Route::group(['prefix' => '/admin', 'namespace' => 'Admin', 'as' => 'admin.'], f
         Route::post('/register', 'Auth\RegisterController@store')->name('register.store');
         Route::get('/resetPassword', 'Auth\ResetPasswordController@index')->name('resetPassword.index');
         Route::patch('/resetPassword', 'Auth\ResetPasswordController@update')->name('resetPassword.update');
+        Route::get('/carousels', 'CarouselController@index')->name('carousel.index');
+        Route::post('/carousels', 'CarouselController@store')->name('carousel.store');
+        Route::get('/carousels/create', 'CarouselController@create')->name('carousel.create');
+        Route::get('/carousels/{id}/edit', 'CarouselController@edit')->name('carousel.edit');
+        Route::patch('/carousels/{id}', 'CarouselController@update')->name('carousel.update');
+        Route::delete('/carousels/{id}', 'CarouselController@destroy')->name('carousel.destroy');
     });
 });
 
