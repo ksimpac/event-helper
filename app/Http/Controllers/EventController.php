@@ -8,6 +8,7 @@ use App\Participant;
 use App\Tag;
 use App\Limit;
 use App\Collection;
+use App\Carousel;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -67,8 +68,10 @@ class EventController extends Controller
         }
 
         $param = $param ?? "最新";
+        $carousels = Carousel::all();
+        $carouselsCount = $carousels->count();
 
-        return view('events.index', compact('events', 'param'));
+        return view('events.index', compact('events', 'param', 'carousels', 'carouselsCount'));
     }
 
     public function create() //新增活動
