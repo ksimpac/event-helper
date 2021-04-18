@@ -47,13 +47,12 @@
         </div>
     </div>
 
-    @if(isset(Auth::user()->STU_ID))
+    @if(isset($isSignUp))
     <div class="row ml-1 mt-2">
         <form action="{{ route('user.signup', ['event' => $event->event_id, 'STU_ID' => Auth::user()->STU_ID]) }}"
             method="post">
             @csrf
-            <button class="btn btn-primary mr-2" @if(now()> $event->enrollDeadline || Auth::check() &&
-                (Auth::user()->type == "系辦" || Auth::user()->type == "系會")) disabled @endif>
+            <button class="btn btn-primary mr-2" @if(now()> $event->enrollDeadline) disabled @endif>
                 @if(!$isSignUp)
                 報名
                 @else
@@ -64,8 +63,7 @@
         <form action="{{ route('user.favorite', ['event' => $event->event_id, 'STU_ID' => Auth::user()->STU_ID]) }}"
             method="post">
             @csrf
-            <button class="btn btn-primary" @if(Auth::check() && (Auth::user()->type == "系辦" || Auth::user()->type ==
-                "系會")) disabled @endif>
+            <button class="btn btn-primary">
                 @if(!$isAddInFavorite)
                 收藏
                 @else
