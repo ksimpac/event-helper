@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
 
+Route::get('/thanks', 'ThanksController@index');
+
 Route::middleware(['auth', 'user'])->group(function () {
     Route::name('user.')->group(function () {
         Route::get('/users/{STU_ID}', 'UserController@show')->name('show');
