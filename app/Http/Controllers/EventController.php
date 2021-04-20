@@ -17,11 +17,13 @@ use App\Exports\ParticipantExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Classes\DateTimeFormat;
 use App\Classes\Card;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class EventController extends Controller
 {
     private $targets;
     private $types;
+    private $indexPath = 'public/image/index/';
 
     public function __construct()
     {
@@ -148,8 +150,9 @@ class EventController extends Controller
 
     public function destroy(Event $event) //刪除活動
     {
-        Storage::delete($event->imageName);
+        Storage::delete($this->indexPath . $event->imageName);
         Event::where('event_id', $event->event_id)->delete();
+        Alert::success('系統訊息', '刪除成功');
         return redirect()->back();
     }
 
