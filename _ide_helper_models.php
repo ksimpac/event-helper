@@ -12,20 +12,86 @@
 
 namespace App{
 /**
+ * App\Admin
+ *
+ * @property int $id
+ * @property string $username
+ * @property string $password
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereUsername($value)
+ */
+	class Admin extends \Eloquent {}
+}
+
+namespace App{
+/**
+ * App\Carousel
+ *
+ * @property int $id
+ * @property string $path
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Carousel newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Carousel newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Carousel query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Carousel whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Carousel whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Carousel wherePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Carousel whereUpdatedAt($value)
+ */
+	class Carousel extends \Eloquent {}
+}
+
+namespace App{
+/**
+ * App\Class_name
+ *
+ * @property int $sno
+ * @property string $DEP_ID
+ * @property string $SCH_DEP
+ * @property string $CID
+ * @property string $SCH_TYPE
+ * @property string $DEP_ABBR
+ * @property string $DEP_NAME
+ * @property string $class_no
+ * @method static \Illuminate\Database\Eloquent\Builder|Class_name newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Class_name newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Class_name query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Class_name whereCID($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Class_name whereClassNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Class_name whereDEPABBR($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Class_name whereDEPID($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Class_name whereDEPNAME($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Class_name whereSCHDEP($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Class_name whereSCHTYPE($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Class_name whereSno($value)
+ */
+	class Class_name extends \Eloquent {}
+}
+
+namespace App{
+/**
  * App\Collection
  *
  * @property int $event_id
- * @property int $user_id
+ * @property string $STU_ID
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Collection newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Collection newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Collection query()
  * @method static \Illuminate\Database\Eloquent\Builder|Collection whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Collection whereEventId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Collection whereSTUID($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Collection whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Collection whereUserId($value)
  */
 	class Collection extends \Eloquent {}
 }
@@ -97,21 +163,45 @@ namespace App{
 
 namespace App{
 /**
+ * App\Manager
+ *
+ * @property int $id
+ * @property string $username
+ * @property string $password
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Manager newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Manager newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Manager query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Manager whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Manager whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Manager wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Manager whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Manager whereUsername($value)
+ */
+	class Manager extends \Eloquent {}
+}
+
+namespace App{
+/**
  * App\Participant
  *
  * @property int $event_id
- * @property int $user_id
+ * @property string $STU_ID
+ * @property string $identify
+ * @property string $NAME
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Event $event
- * @property-read \App\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Participant newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Participant newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Participant query()
  * @method static \Illuminate\Database\Eloquent\Builder|Participant whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Participant whereEventId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Participant whereIdentify($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Participant whereNAME($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Participant whereSTUID($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Participant whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Participant whereUserId($value)
  */
 	class Participant extends \Eloquent {}
 }
@@ -134,50 +224,5 @@ namespace App{
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUpdatedAt($value)
  */
 	class Tag extends \Eloquent {}
-}
-
-namespace App{
-/**
- * App\User
- *
- * @property int $user_id
- * @property string $account
- * @property string $password
- * @property string|null $std_id
- * @property string|null $realname
- * @property string|null $telephone
- * @property string|null $identify
- * @property string|null $email
- * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property int $point
- * @property string $type
- * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Collection[] $collections
- * @property-read int|null $collections_count
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Participant[] $participants
- * @property-read int|null $participants_count
- * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User query()
- * @method static \Illuminate\Database\Eloquent\Builder|User whereAccount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereIdentify($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePoint($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereRealname($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereStdId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereTelephone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserId($value)
- */
-	class User extends \Eloquent {}
 }
 
