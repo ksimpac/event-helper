@@ -13,6 +13,6 @@ class ThanksController extends Controller
                     109級&nbsp;流管系&nbsp;羅雅平&nbsp;</p>
                     <p>指導老師:&nbsp;楊淑玲老師&nbsp;林文祥老師</p>";
         Alert::html('致謝名單', $htmlCode, 'info')->persistent(true, false);
-        return redirect()->route('event.index');
+        return redirect()->back();
     }
 }
