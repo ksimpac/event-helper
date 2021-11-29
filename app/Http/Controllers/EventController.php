@@ -102,8 +102,8 @@ class EventController extends Controller
     {
         $data = $this->process($request);
         $event_id = Event::create($data)->event_id;
-        $this->tags($data, $event_id);
-        $this->limits($data, $event_id);
+        $this->tags($data['tags'], $event_id);
+        $this->limits($data['targets'], $event_id);
         return redirect('/');
     }
 
